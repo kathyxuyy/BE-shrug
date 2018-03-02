@@ -21,7 +21,7 @@ function(input, output) {
        output$businesses <- DT::renderDataTable(compress, escape = FALSE)
        
        #input$search_input
-      
+       
   })
   
 }
