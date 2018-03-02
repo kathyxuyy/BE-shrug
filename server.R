@@ -16,8 +16,8 @@ function(input, output) {
        # this line makes it so the data table can be printed without altering the values in these columns
        # they are normally in a form of a list and idk how to change them to string, to be fixed eventually
        compress <- flatten(business_data[[1]]) %>% select(-id, -categories, -location.display_address, -categories, -transactions, -coordinates.latitude, -coordinates.longitude)
-       compress$
-       output$businesses <- DT::renderDataTable(compress)
+       compress$image_url <- paste("<img src='", compress$image_url, "' height = '60'</img>", sep = "")
+       output$businesses <- DT::renderDataTable(compress, escape = FALSE)
        #input$search_input
       
   })

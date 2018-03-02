@@ -14,5 +14,6 @@ body <- content(response, "text")
 data <- fromJSON(body)
 
 # turns data from a list into a DF
-compressed <- flatten(flatten(data[[1]]))
+compressed <- flatten(data[[1]]) %>% select(-id, -categories, -location.display_address, -categories, -transactions, -coordinates.latitude, -coordinates.longitude)
+compressed$image_url <- paste("<img-src> ='", compressed$image_url, "'", sep = "")
 
