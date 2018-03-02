@@ -8,11 +8,11 @@ shinyUI(
     
     # Would like to implement navbarpage, would provide for easy navigation
     
-    #navbarPage("My Application",
-    #                  tabPanel("Component 1"),
-    #                  tabPanel("Component 2"),
-    #                  tabPanel("Component 3")
-    #))
+    navbarPage("Business",
+                      tabPanel("Component 1"),
+                      tabPanel("Component 2"),
+                      tabPanel("Component 3")
+    ),
     
     titlePanel("Yelp Business"),
     
@@ -26,10 +26,10 @@ shinyUI(
       
       mainPanel(
         DT::dataTableOutput("businesses") 
-        
+       
       )
        
     )
     
   )
-)
+)  

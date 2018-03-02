@@ -3,6 +3,7 @@
 source("read_data.R")
 library(dplyr)
 library(DT)
+library(ggplot2)
 
 function(input, output) {
   observeEvent(input$search_button, {
@@ -18,6 +19,7 @@ function(input, output) {
        compress <- flatten(business_data[[1]]) %>% select(-id, -categories, -location.display_address, -categories, -transactions, -coordinates.latitude, -coordinates.longitude)
        compress$image_url <- paste("<img src='", compress$image_url, "' height = '60'</img>", sep = "")
        output$businesses <- DT::renderDataTable(compress, escape = FALSE)
+       
        #input$search_input
       
   })
