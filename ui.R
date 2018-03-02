@@ -1,5 +1,6 @@
 # ui.R file
 
+library(leaflet)
 library(shiny)
 library(DT)
 
@@ -31,7 +32,9 @@ shinyUI(
       
       # panel for plotting information related to business
       tabPanel("Plotting Stuff?",
-        "hi"         
+        "hi",
+        leafletOutput("mymap"),
+        actionButton("recalc", "New points")         
       ),
       
       

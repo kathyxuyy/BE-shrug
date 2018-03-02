@@ -1,8 +1,11 @@
 source("key.R")
 
+
 library(httr)
 library(jsonlite)
 library(dplyr)
+library(maps)
+library(mapproj)
 
 base_yelp_url <- "https://api.yelp.com/v3/"
 
@@ -14,6 +17,17 @@ body <- content(response, "text")
 data <- fromJSON(body)
 
 # turns data from a list into a DF
-compressed <- flatten(data[[1]]) %>% select(-id, -categories, -location.display_address, -categories, -transactions, -coordinates.latitude, -coordinates.longitude)
+compressed <- flatten(data[[1]]) %>% select(-id, -categories, -location.display_address, -categories, -transactions)
 compressed$image_url <- paste("<img-src> ='", compressed$image_url, "'", sep = "")
+ggplot(data = compressed, mapping = aes(x = coordinates.longitude, y = coordinates.latitude, color=rating)) +
+  geom_point()
+  coord_map()
 
+  r_colors <- rgb(t(col2rgb(colors()) / 255))
+  names(r_colors) <- colors()
+  
+  
+  
+  
+  
+  
