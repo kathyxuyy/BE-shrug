@@ -26,12 +26,15 @@ function(input, output, session){
   
     # mapStates = map("state", fill = TRUE, plot = FALSE)
     
-    
-    
   })
   
-  map <- leaflet() %>% addTiles() %>% setView(-93.65, 42.0285, zoom = 17)
+  map <- leaflet() %>% addTiles() %>% setView(-101.204687, 40.607628, zoom = 3)
   output$myMap <- renderLeaflet(map)
   
+  observeEvent(input$location_button, {
+    location <- geocode(input$location_box)
+    output$myMap <- renderLeaflet(map %>% setView(location[1], location[2], zoom = 13))
+  
+  })
   
 }

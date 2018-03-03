@@ -8,6 +8,7 @@ library(maps)
 library(mapproj)
 library(ggplot2)
 library(leaflet)
+library(ggmap)
 
 base_yelp_url <- "https://api.yelp.com/v3/"
 
@@ -24,13 +25,6 @@ compressed$image_url <- paste("<img-src> ='", compressed$image_url, "'", sep = "
 ggplot(data = compressed, mapping = aes(x = coordinates.longitude, y = coordinates.latitude, color=rating)) +
   geom_point()
   coord_map()
-
-  r_colors <- rgb(t(col2rgb(colors()) / 255))
-  names(r_colors) <- colors()
-  
-  #mymap = leaflet()
-  #mymap = addTiles(mymap)
-  #mymap = setView(mymap, lng = 78.0419, lat = 27.1750, zoom = 15)
   
   
   

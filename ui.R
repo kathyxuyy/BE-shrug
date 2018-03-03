@@ -25,8 +25,8 @@ shinyUI(
       tabPanel("Location Search",
         sidebarLayout(
           sidebarPanel(
-            textInput("location_input", "Type your location here"),
-            actionButton("search_button", label = "", icon = shiny::icon("search"))
+            textInput("location_box", "Type your location here"),
+            actionButton("location_button", label = "", icon = shiny::icon("search"))
           ),
         
         
