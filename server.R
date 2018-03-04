@@ -101,6 +101,7 @@ function(input, output, session){
     response <- GET(url = paste(base_yelp_url, reviews, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
     body <- content(response, "text")
     review_data <- fromJSON(body)
+    review_data$reviews$reviewer <- review_data$reviews$user$name
     output$review <- renderDataTable(DT::datatable(review_data$reviews, escape = FALSE, selection ="none"))
     
   })
