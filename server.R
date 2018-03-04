@@ -36,12 +36,16 @@ function(input, output, session){
     query.params = list(term = input$search_box, location = input$location_box)
     response <- GET(url = paste(base_yelp_url, path, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
     body <- content(response, "text")
-    specific_data <- fromJSON(body)[[1]]
+    specific_data <- fromJSON(body)
+    region <- specific_data[[3]]
+    center <- region[[1]]
     
-    
-    business_frame <- flatten(specific_data)
-    
-    output$myMap <- renderLeaflet(map %>% setView(business_frame$coordinates.longitude[[1]], business_frame$coordinates.latitude[[1]], zoom = 15) %>% addMarkers(business_frame$coordinates.longitude[[1]], business_frame$coordinates.latitude[[1]], label = business_frame$name[[1]]))
+    business_frame <- flatten(specific_data[[1]])
+    print(str(business_frame))
+    output$myMap <- renderLeaflet(map %>% 
+                                    setView(center[[1]],center[[2]], zoom = 13) %>% 
+                                    addMarkers(lng = business_frame$coordinates.longitude, 
+                                              lat = business_frame$coordinates.latitude, label = business_frame$name))
   
   })
   
