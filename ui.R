@@ -9,33 +9,41 @@ shinyUI(
     navbarPage("Yelp Business",
         tabPanel("Business Search",
           sidebarLayout(
-          
-          sidebarPanel(
-            textInput("search_input", "Type your search here"),
-            textInput("location_input", "Type your location here"),
-            actionButton("search_button", label = "", icon = shiny::icon("search"))
-            
-          ),
+            sidebarPanel(
+              textInput("search_input", "Type your search here"),
+              textInput("location_input", "Type your location here"),
+              actionButton("search_button", label = "", icon = shiny::icon("search"))
+            ),
             mainPanel(
               DT::dataTableOutput("businesses")
-            )
+              )
           )
         ),  
           
-      tabPanel("Location Search",
-        sidebarLayout(
-          sidebarPanel(
-            textInput("search_box", "Type your business here"),
-            textInput("location_box", "Type your location here"),
-            actionButton("location_button", label = "", icon = shiny::icon("search"))
-          ),
+        tabPanel("Location Search",
+          sidebarLayout(
+            sidebarPanel(
+              textInput("search_box", "Type your business here"),
+              textInput("location_box", "Type your location here"),
+              actionButton("location_button", label = "", icon = shiny::icon("search"))
+            ),
+            mainPanel(
+              leafletOutput('myMap', height = "800")
+            )
+          )
+        ),
         
-        
-        mainPanel(
-          leafletOutput('myMap', height = "800")
+        tabPanel("Location Analytics",
+          sidebarLayout(
+            sidebarPanel(
+                
+              
+            ),
+            mainPanel(
+              
+            )
+          )
         )
-      )
-    )
     )
   )
 )
