@@ -25,13 +25,14 @@ shinyUI(
       tabPanel("Location Search",
         sidebarLayout(
           sidebarPanel(
+            textInput("search_box", "Type your business here"),
             textInput("location_box", "Type your location here"),
             actionButton("location_button", label = "", icon = shiny::icon("search"))
           ),
         
         
         mainPanel(
-          leafletOutput('myMap')
+          leafletOutput('myMap', height = "800")
         )
       )
     )
