@@ -43,6 +43,7 @@ function(input, output, session){
     center <- region[[1]]
     
     business_frame <- flatten(specific_data[[1]])
+<<<<<<< HEAD
     if (input$business_filter != "") {
         business_frame <- filter(business_frame, price == input$business_filter)
     }
@@ -55,6 +56,33 @@ function(input, output, session){
                                     addMarkers(lng = business_frame$coordinates.longitude, 
                                               lat = business_frame$coordinates.latitude, label = business_frame$name))
     }  
+=======
+    
+    getColor <- function(business_frame) {
+      sapply(business_frame$rating, function(rating) {
+        if(rating >= 4.5) {
+          "http://leafletjs.com/examples/custom-icons/leaf-green.png"
+        }else if(rating >=3.5 ) {
+          "http://leafletjs.com/examples/custom-icons/leaf-orange.png"
+        } else {
+          "http://leafletjs.com/examples/custom-icons/leaf-red.png"
+        } })
+    }
+    greenLeafIcon <- makeIcon(
+      iconUrl = getColor(business_frame),
+      iconWidth = 38, iconHeight = 95,
+      iconAnchorX = 22, iconAnchorY = 94,
+      shadowUrl = "http://leafletjs.com/examples/custom-icons/leaf-shadow.png",
+      shadowWidth = 50, shadowHeight = 64,
+      shadowAnchorX = 4, shadowAnchorY = 62
+    )
+    
+   
+    output$myMap <- renderLeaflet(map %>% 
+                                    setView(center[[1]],center[[2]], zoom = 13) %>% 
+                                    addMarkers(lng = business_frame$coordinates.longitude, 
+                                              lat = business_frame$coordinates.latitude, icon=greenLeafIcon,label = business_frame$name))
+>>>>>>> 5158371c6d9d7b14b7392012964ab6a6f0ceeb92
   
   })
   
