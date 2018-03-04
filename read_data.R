@@ -26,7 +26,3 @@ ggplot(data = compressed, mapping = aes(x = coordinates.longitude, y = coordinat
   coord_map()
   
   
-  
-  
-  
-  

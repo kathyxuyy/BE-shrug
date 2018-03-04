@@ -32,8 +32,16 @@ function(input, output, session){
   output$myMap <- renderLeaflet(map)
   
   observeEvent(input$location_button, {
-    location <- geocode(input$location_box)
-    output$myMap <- renderLeaflet(map %>% setView(location[1], location[2], zoom = 13))
+    path = "businesses/search"
+    query.params = list(term = input$search_box, location = input$location_box)
+    response <- GET(url = paste(base_yelp_url, path, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
+    body <- content(response, "text")
+    specific_data <- fromJSON(body)[[1]]
+    
+    
+    business_frame <- flatten(specific_data)
+    
+    output$myMap <- renderLeaflet(map %>% setView(business_frame$coordinates.longitude[[1]], business_frame$coordinates.latitude[[1]], zoom = 15) %>% addMarkers(business_frame$coordinates.longitude[[1]], business_frame$coordinates.latitude[[1]], label = business_frame$name[[1]]))
   
   })
   
