@@ -6,6 +6,7 @@ library(DT)
 
 shinyUI(
   fluidPage(
+    includeCSS("style.css"),
     navbarPage("Yelp Business",
         tabPanel("Business Search",
           sidebarLayout(
