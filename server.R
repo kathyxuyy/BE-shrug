@@ -84,5 +84,25 @@ function(input, output, session){
   
   })
   
+  observeEvent(input$compare, {
+    base_yelp_url <- "https://api.yelp.com/v3/"
+    path = "businesses/search"
+    query.params = list(term = input$name1, location = input$locationlocation, limit = 1)
+    response <- GET(url = paste(base_yelp_url, path, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
+    body <- content(response, "text")
+    business_data <- fromJSON(body)
+    
+    compress <- flatten(business_data[[1]]) %>% select(-categories, -location.display_address, -categories, -transactions, -coordinates.latitude, -coordinates.longitude)
+    compress$image_url <- paste("<img src='", compress$image_url, "' height = '60'</img>", sep = "")
+    compress$url <- paste0("<a href='", compress$url, "' class = 'button'>Website</a>")
+    output$test <- renderDataTable(DT::datatable(compress, escape = FALSE, selection = "none"))
+    
+    reviews <- paste("businesses/", compress$id, "/reviews", sep = "")
+    response <- GET(url = paste(base_yelp_url, reviews, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
+    body <- content(response, "text")
+    review_data <- fromJSON(body)
+    output$review <- renderDataTable(DT::datatable(review_data$reviews, escape = FALSE, selection ="none"))
+    
+  })
   
 }

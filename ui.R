@@ -41,6 +41,20 @@ shinyUI(
       )
     ),
     
+    tabPanel("Business Comparison",
+      sidebarLayout(
+        sidebarPanel(
+          textInput("name1", "Type business' name here"),
+          textInput("name2", "Type business' name here"),
+          textInput("locationlocation", "Type your location here"),
+          actionButton("compare", label = "", icon = shiny::icon("search"))
+        ),
+        mainPanel(dataTableOutput("test"),
+                  dataTableOutput("review"))
+        )
+    ),
+    
+    
     tabPanel("Location Analytics",
       sidebarLayout(
         sidebarPanel(
