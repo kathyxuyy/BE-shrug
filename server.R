@@ -13,23 +13,25 @@ function(input, output, session){
   observeEvent(input$search_button, {
     base_yelp_url <- "https://api.yelp.com/v3/"
     path = "businesses/search"
-    query.params = list(term = input$search_input, location = input$location_input)
+    query.params = list(term = input$search_input, location = input$location_input, limit = 50)
     response <- GET(url = paste(base_yelp_url, path, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
     body <- content(response, "text")
     business_data <- fromJSON(body)
     
     # this line makes it so the data table can be printed without altering the values in these columns
     # they are normally in a form of a list and idk how to change them to string, to be fixed eventually
-    compress <- flatten(business_data[[1]]) %>% select(-id, -categories, -location.display_address, -categories, -transactions, -coordinates.latitude, -coordinates.longitude)
+    compress <- flatten(business_data[[1]]) %>% select(-id, -is_closed, -categories, -location.display_address, -categories, -transactions, -coordinates.latitude, -coordinates.longitude, -distance, -display_phone)
     compress$image_url <- paste("<img src='", compress$image_url, "' height = '60'</img>", sep = "")
-    output$businesses <- DT::renderDataTable(compress, escape = FALSE)
+    compress$url <- paste0("<a href='", compress$url, "' class = 'button'>Website</a>")
+    output$businesses <- renderDataTable(DT::datatable(compress, escape = FALSE, selection = "none"))
   
-    # mapStates = map("state", fill = TRUE, plot = FALSE)
-    
   })
   
   map <- leaflet() %>% addTiles() %>% setView(-101.204687, 40.607628, zoom = 3)
   output$myMap <- renderLeaflet(map)
+  
+  business_frame <- data.frame()
+  center <- vector("list")
   
   observeEvent(input$location_button, {
     path = "businesses/search"
@@ -41,12 +43,20 @@ function(input, output, session){
     center <- region[[1]]
     
     business_frame <- flatten(specific_data[[1]])
-    print(str(business_frame))
-    output$myMap <- renderLeaflet(map %>% 
+    if (input$business_filter != "") {
+        business_frame <- filter(business_frame, price == input$business_filter)
+    }
+    if (nrow(business_frame) == 0) {
+      view_city <- geocode(input$location_box)
+      output$myMap <- renderLeaflet(map %>% setView(view_city[[1]], view_city[[2]], zoom = 13))
+    } else {
+      output$myMap <- renderLeaflet(map %>% 
                                     setView(center[[1]],center[[2]], zoom = 13) %>% 
                                     addMarkers(lng = business_frame$coordinates.longitude, 
                                               lat = business_frame$coordinates.latitude, label = business_frame$name))
+    }  
   
   })
+  
   
 }

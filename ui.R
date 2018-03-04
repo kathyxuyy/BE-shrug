@@ -17,7 +17,7 @@ shinyUI(
             
           ),
             mainPanel(
-              DT::dataTableOutput("businesses")
+              dataTableOutput("businesses")
             )
           )
         ),  
@@ -27,6 +27,9 @@ shinyUI(
           sidebarPanel(
             textInput("search_box", "Type your business here"),
             textInput("location_box", "Type your location here"),
+            
+            #filters for the map: price, 
+            radioButtons("business_filter", label = "Prices", choices = list("No Preference" = "", "$", "$$", "$$$", "$$$$")),
             actionButton("location_button", label = "", icon = shiny::icon("search"))
           ),
         
@@ -35,6 +38,20 @@ shinyUI(
           leafletOutput('myMap', height = "800")
         )
       )
+    ),
+    
+    tabPanel("Location Analytics",
+      sidebarLayout(
+        sidebarPanel(
+          "hi"
+        ),
+        
+        mainPanel(
+          "hi"
+        )
+        
+      )         
+             
     )
     )
   )
