@@ -1,4 +1,4 @@
-  # server.R file
+# server.R file
 
 source("read_data.R")
 library(dplyr)
@@ -43,7 +43,7 @@ function(input, output, session){
     center <- region[[1]]
     
     business_frame <- flatten(specific_data[[1]])
-
+<<<<<<< HEAD
     if (input$business_filter != "") {
         business_frame <- filter(business_frame, price == input$business_filter)
     }
@@ -56,6 +56,7 @@ function(input, output, session){
                                     addMarkers(lng = business_frame$coordinates.longitude, 
                                               lat = business_frame$coordinates.latitude, label = business_frame$name))
     }  
+=======
     
     getColor <- function(business_frame) {
       sapply(business_frame$rating, function(rating) {
@@ -81,29 +82,9 @@ function(input, output, session){
                                     setView(center[[1]],center[[2]], zoom = 13) %>% 
                                     addMarkers(lng = business_frame$coordinates.longitude, 
                                               lat = business_frame$coordinates.latitude, icon=greenLeafIcon,label = business_frame$name))
+>>>>>>> 5158371c6d9d7b14b7392012964ab6a6f0ceeb92
   
   })
   
-  observeEvent(input$compare, {
-    base_yelp_url <- "https://api.yelp.com/v3/"
-    path = "businesses/search"
-    query.params = list(term = input$name1, location = input$locationlocation, limit = 1)
-    response <- GET(url = paste(base_yelp_url, path, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
-    body <- content(response, "text")
-    business_data <- fromJSON(body)
-    
-    compress <- flatten(business_data[[1]]) %>% select(-categories, -location.display_address, -categories, -transactions, -coordinates.latitude, -coordinates.longitude)
-    compress$image_url <- paste("<img src='", compress$image_url, "' height = '60'</img>", sep = "")
-    compress$url <- paste0("<a href='", compress$url, "' class = 'button'>Website</a>")
-    output$test <- renderDataTable(DT::datatable(compress, escape = FALSE, selection = "none"))
-    
-    reviews <- paste("businesses/", compress$id, "/reviews", sep = "")
-    response <- GET(url = paste(base_yelp_url, reviews, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
-    body <- content(response, "text")
-    review_data <- fromJSON(body)
-    review_data$reviews$reviewer <- review_data$reviews$user$name
-    output$review <- renderDataTable(DT::datatable(review_data$reviews, escape = FALSE, selection ="none"))
-    
-  })
   
 }
