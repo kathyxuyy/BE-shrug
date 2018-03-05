@@ -104,6 +104,29 @@ function(input, output, session){
     review_data$reviews$reviewer <- review_data$reviews$user$name
     output$review <- renderDataTable(DT::datatable(review_data$reviews, escape = FALSE, selection ="none"))
     
+    
   })
   
+  output$analytics <- renderPlot({
+    base_yelp_url <- "https://api.yelp.com/v3/"
+    
+    requestData <- function(n) {
+      query.params = list(term = "food", location = "Chicago", limit=50, offset=50*n-50)
+      response <- GET(url = paste(base_yelp_url, path, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
+      body <- content(response, "text")
+      data <- fromJSON(body)
+      compressed <- flatten(data[[1]])
+      return (compressed)
+    }
+    business.info <- data.frame()
+    for (i in 1:20) {
+      data <- requestData(i)
+      business.info <- rbind(data,df)
+    }
+    result <- business.info %>%
+      group_by(rating) %>%
+      summarize(count=n())
+    # Outputs the graph
+    ggplot(result, aes(rating, count)) + geom_bar(stat = "identity")
+  })
 }
