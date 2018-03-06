@@ -7,7 +7,7 @@ library(DT)
 shinyUI(
   fluidPage(theme = "bootstrap.css", class = "sure",
     includeCSS("style.css"),
-    navbarPage("Yelp Business", id = "no",
+    navbarPage("Yelp Business", id = ".navbar",
                tabPanel("Business Search",
                         sidebarLayout(
                           
