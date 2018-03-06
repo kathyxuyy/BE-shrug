@@ -7,7 +7,7 @@ library(DT)
 shinyUI(
   fluidPage(theme = "bootstrap.css", class = "sure",
     includeCSS("style.css"),
-    navbarPage("Yelp Business", id = ".navbar",
+      navbarPage("Yelp Business", id = "no", inverse = TRUE,
                tabPanel("Business Search",
                         sidebarLayout(
                           
@@ -17,7 +17,7 @@ shinyUI(
                             actionButton("search_button", label = "", icon = shiny::icon("search"))
                             
                           ),
-                          mainPanel(
+                          mainPanel(id = "yes",
                             dataTableOutput("businesses")
                           )
                         )

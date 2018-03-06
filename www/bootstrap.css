@@ -7,10 +7,19 @@ background-color: blue;
 }
 
 #no {
-background-color: red;
+// background-color: red;
+font-family: "Impact";
+color: red;
 }
 
-#business {
+#businesses {
 background-color: green;
-font-family: "Comics Sans";
+font-family: "Impact";
 }
+
+#yes {
+background-color: yellow;
+fount-family: "Impact";
+}
+
+
