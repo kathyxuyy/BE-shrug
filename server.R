@@ -111,8 +111,8 @@ function(input, output, session){
     base_yelp_url <- "https://api.yelp.com/v3/"
     
     requestData <- function(n) {
-      query.params = list(term = "food", location = "Chicago", limit=50, offset=50*n-50)
-      response <- GET(url = paste(base_yelp_url, path, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
+      query.params = list(term = "food", location = input$search_location, limit=50, offset=50*n-50)
+      suppressWarnings(response <- GET(url = paste(base_yelp_url, path, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json()))
       body <- content(response, "text")
       data <- fromJSON(body)
       compressed <- flatten(data[[1]])
@@ -123,10 +123,17 @@ function(input, output, session){
       data <- requestData(i)
       business.info <- rbind(data,df)
     }
-    result <- business.info %>%
-      group_by(rating) %>%
-      summarize(count=n())
-    # Outputs the graph
-    ggplot(result, aes(rating, count)) + geom_bar(stat = "identity")
+    business.categories <- data.frame();
+    for (i in 1:1000) {
+      x <- business.info$categories[[i]]
+      business.categories <- rbind(business.categories, x)
+    }
+    business.categories <- business.categories %>%
+      group_by(title) %>%
+      summarize(count = n())
+    business.categories<- business.categories[with(business.categories,order(-count)),]
+    business.categories <- business.categories[1:6,]
+    ggplot(business.categories, aes(x = reorder(title, -count), y = count)) + geom_bar(stat = "identity") + labs(x="Categories", y="Count") +
+      ggtitle(paste0("Top 6 Categories in ", input$search_location)) + theme(plot.title = element_text(size = 30, face = "bold", hjust= 0.5 ))
   })
 }
