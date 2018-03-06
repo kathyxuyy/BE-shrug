@@ -87,8 +87,7 @@ shinyUI(
                tabPanel("Location Analytics",
                         sidebarLayout(
                           sidebarPanel(
-                            textInput("search_location", "Enter a location:"),
-                            selectInput("factor", "Select the variable you are interested in:", choices = list("price", "rating"))
+                            textInput("search_location", "Enter a location:", value = "Seattle")
                           ),
                           mainPanel(
                             plotOutput("analytics")
