@@ -93,9 +93,26 @@ function(input, output, session){
     business_data <- fromJSON(body)
     
     compress <- flatten(business_data[[1]]) %>% select(-categories, -location.display_address, -categories, -transactions, -coordinates.latitude, -coordinates.longitude)
-    compress$image_url <- paste("<img src='", compress$image_url, "' height = '60'</img>", sep = "")
+    compress$image_url <- paste("<img src='", compress$image_url, "' height = '250'</img>", sep = "")
     compress$url <- paste0("<a href='", compress$url, "' class = 'button'>Website</a>")
     output$test <- renderDataTable(DT::datatable(compress, escape = FALSE, selection = "none"))
+    output$bn1 <- renderText(compress$name)
+    output$bi1 <- renderText(compress$image_url)
+    # output$bp1 <- renderText(paste("Phone:", compress$display_phone))
+    output$address <- renderText("Address:")
+    output$phone <- renderText("Phone:")
+    star_rate <- ""
+    for(i in 1:compress$rating){
+      star_rate <- paste(star_rate, "*", sep = "")
+    }
+    if(compress$rating %% 1 == 0.5){
+      star_rate <- paste(star_rate, ".5", sep = "")
+    }
+    output$star <- renderText(star_rate)
+    output$bp1 <- renderText(compress$display_phone)
+    output$ba1p1 <- renderText(compress$location.address1)
+    output$ba1p3 <- renderText(paste(compress$location.address2, compress$location.address3))
+    output$ba1p2 <- renderText(paste(compress$location.zipcode, " ", compress$location.city, ", ", compress$location.state, ", ", compress$location.country, sep = ""))
     
     reviews <- paste("businesses/", compress$id, "/reviews", sep = "")
     response <- GET(url = paste(base_yelp_url, reviews, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())

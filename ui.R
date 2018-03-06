@@ -5,9 +5,9 @@ library(shiny)
 library(DT)
 
 shinyUI(
-  fluidPage(
+  fluidPage(theme = "bootstrap.css", class = "sure",
     includeCSS("style.css"),
-    navbarPage("Yelp Business",
+    navbarPage("Yelp Business", id = "no",
                tabPanel("Business Search",
                         sidebarLayout(
                           
@@ -77,9 +77,20 @@ shinyUI(
                                  actionButton("compare", label = "", icon = shiny::icon("search"))
                           )
                         ),
+                        
                         fluidRow(
-                          column(6, dataTableOutput("test")),
-                          column(6, dataTableOutput("review"))
+                          column(6, 
+                                 h2(textOutput("bn1")),
+                                 htmlOutput("bi1"),
+                                 textOutput("phone"),
+                                 textOutput("bp1"),
+                                 textOutput("address"),
+                                 textOutput("ba1p1"),
+                                 textOutput("ba1p3"),
+                                 textOutput("ba1p2"),
+                                 h3(textOutput("star"))
+                                 ),
+                          column(6, dataTableOutput("test"))
                         )
                ),
                
