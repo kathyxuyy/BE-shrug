@@ -5,6 +5,7 @@ library(DT)
 library(ggplot2)
 library(maps)
 library(mapproj)
+library(ggmap)
 library(leaflet)
 library(httr)
 library(jsonlite)
@@ -12,8 +13,8 @@ library(jsonlite)
 source("key.R")
 
 function(input, output, session){
+  base_yelp_url <- "https://api.yelp.com/v3/"
   observeEvent(input$search_button, {
-    base_yelp_url <- "https://api.yelp.com/v3/"
     path = "businesses/search" 
     query.params = list(term = input$search_input, location = input$location_input, limit = 50)
     response <- GET(url = paste(base_yelp_url, path, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
@@ -66,7 +67,7 @@ function(input, output, session){
       output$myMap <- renderLeaflet(map %>% 
                                     setView(center[[1]],center[[2]], zoom = 13) %>% 
                                     addMarkers(lng = business_frame$coordinates.longitude, 
-                                              lat = business_frame$coordinates.latitude, label = business_frame$name))
+                                              lat = business_frame$coordinates.latitude, icon=greenLeafIcon, label = business_frame$name))
     }  
     
     getColor <- function(business_frame) {
@@ -79,6 +80,7 @@ function(input, output, session){
           "http://leafletjs.com/examples/custom-icons/leaf-red.png"
         } })
     }
+    
     greenLeafIcon <- makeIcon(
       iconUrl = getColor(business_frame),
       iconWidth = 38, iconHeight = 95,
@@ -87,12 +89,6 @@ function(input, output, session){
       shadowWidth = 50, shadowHeight = 64,
       shadowAnchorX = 4, shadowAnchorY = 62
     )
-    
-   
-    output$myMap <- renderLeaflet(map %>% 
-                                    setView(center[[1]],center[[2]], zoom = 13) %>% 
-                                    addMarkers(lng = business_frame$coordinates.longitude, 
-                                              lat = business_frame$coordinates.latitude, icon=greenLeafIcon,label = business_frame$name))
   
   })
   
@@ -120,9 +116,10 @@ function(input, output, session){
   })
   
   output$analytics <- renderPlot({
-    base_yelp_url <- "https://api.yelp.com/v3/"
+
     
     requestData <- function(n) {
+      path = "businesses/search" 
       query.params = list(term = "food", location = input$search_location, limit=50, offset=50*n-50)
       suppressWarnings(response <- GET(url = paste(base_yelp_url, path, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json()))
       body <- content(response, "text")
@@ -134,7 +131,7 @@ function(input, output, session){
     business.info <- data.frame()
     for (i in 1:20) {
       data <- requestData(i)
-      business.info <- rbind(data,df)
+      business.info <- rbind(business.info, data)
     }
     business.categories <- data.frame();
     for (i in 1:1000) {
