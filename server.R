@@ -1,6 +1,5 @@
   # server.R file
 
-source("read_data.R")
 library(dplyr)
 library(DT)
 library(ggplot2)
@@ -8,6 +7,7 @@ library(maps)
 library(mapproj)
 library(leaflet)
 
+source("key.R")
 
 function(input, output, session){
   observeEvent(input$search_button, {
@@ -118,6 +118,7 @@ function(input, output, session){
       compressed <- flatten(data[[1]])
       return (compressed)
     }
+    
     business.info <- data.frame()
     for (i in 1:20) {
       data <- requestData(i)
