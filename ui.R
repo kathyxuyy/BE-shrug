@@ -91,12 +91,16 @@ shinyUI(
                                          htmlOutput("line"),
                                          textOutput("phone"),
                                          textOutput("bp1"),
+                                         htmlOutput("line2"),
                                          textOutput("address"),
                                          textOutput("ba1p1"),
                                          textOutput("ba1p3"),
                                          textOutput("ba1p2"),
-                                         h2(textOutput("reviews")),
-                                         h3(textOutput("star"))
+                                         htmlOutput("line3"),
+                                         textOutput("Average"),
+                                         h4(textOutput("star")),
+                                         h3(textOutput("reviews"))
+                                         
                                   ),
                                   column(6, dataTableOutput("test"))
                                 )
