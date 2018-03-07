@@ -99,10 +99,17 @@ shinyUI(
                                          htmlOutput("line3"),
                                          textOutput("Average"),
                                          h4(textOutput("star")),
-                                         h3(textOutput("reviews"))
+                                         h3(textOutput("reviews")),
+                                         textOutput("reviewtext1"),
+                                         htmlOutput("more1"),
+                                         tags$br(),
+                                         h4(textOutput("reviewStars1")),
+                                         tags$br(),
+                                         textOutput("reviewName1"),
+                                         textOutput("reviewDate1")
                                          
                                   ),
-                                  column(6, dataTableOutput("test"))
+                                  column(6, dataTableOutput("review"))
                                 )
                        ),
                        
@@ -124,7 +131,7 @@ shinyUI(
                                 sidebarLayout(
                                   sidebarPanel(
                                     textInput("search_location", "Enter a location:", value = "Seattle"),
-                                    radioButtons("factor", label = "", choices = list("price", "rating")),
+                                    radioButtons("factor", label = "", choices = list("rating" = 2, "price" = 3)),
                                     actionButton("popular_button", label = "", icon = shiny::icon("search"))
                                   ),
                                   mainPanel(

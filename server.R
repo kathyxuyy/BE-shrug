@@ -122,14 +122,26 @@ function(input, output, session){
     return(compress)
   }
   
-  # getReviews <- function(data){
-  #   reviews <- paste("businesses/", data$id, "/reviews", sep = "")
-  #   response <- GET(url = paste(base_yelp_url, reviews, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
-  #   body <- content(response, "text")
-  #   review_data <- fromJSON(body)
-  #   review_data$reviews$reviewer <- review_data$reviews$user$name
-  #   return(review_data)
-  # }
+  getReviews <- function(data){
+    reviews <- paste("businesses/", data$id, "/reviews", sep = "")
+    response <- GET(url = paste(base_yelp_url, reviews, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
+    body <- content(response, "text")
+    review_data <- fromJSON(body)
+    review_data$reviews$reviewer <- review_data$reviews$user$name
+    review_data$reviews$url <- paste0("<a href='", review_data$reviews$url, "' class = 'button'>More</a>")
+    return(review_data)
+  }
+  
+  makeStars <- function(num){
+    star_rate <- ""
+    for(i in 1:num){
+      star_rate <- paste(star_rate, "*", sep = "")
+    }
+    if(num %% 1 == 0.5){
+      star_rate <- paste(star_rate, ".5", sep = "")
+    }
+    return(star_rate)
+  }
   
   observeEvent(input$compare, {
     compress1 <- get_Data(input$name1, input$locationlocation)
@@ -144,21 +156,32 @@ function(input, output, session){
     output$reviews <- renderText("Reviews")
     output$address <- renderText("Address:")
     output$phone <- renderText("Phone:")
-    star_rate <- ""
-    for(i in 1:compress1$rating){
-      star_rate <- paste(star_rate, "*", sep = "")
-    }
-    if(compress1$rating %% 1 == 0.5){
-      star_rate <- paste(star_rate, ".5", sep = "")
-    }
-    output$star <- renderText(star_rate)
+    
+    output$star <- renderText(makeStars(compress1$rating))
     output$bp1 <- renderText(compress1$display_phone)
     output$ba1p1 <- renderText(compress1$location.address1)
     output$ba1p3 <- renderText(paste(compress1$location.address2, compress1$location.address3))
     output$ba1p2 <- renderText(paste(compress1$location.zipcode, " ", compress1$location.city, ", ", compress1$location.state, ", ", compress1$location.country, sep = ""))
     
-    # reviews1 <- getReviews(compress1$id)
-    # output$review <- renderDataTable(DT::datatable(reviews1$reviews, escape = FALSE, selection ="none"))
+    reviews1 <- getReviews(compress1)$reviews
+    if(nrow(reviews1) >= 1){
+      output$reviewtext1 <- renderText(reviews1[1,]$text)
+      output$more1 <- renderText(reviews1[1,]$url)
+      output$reviewName1 <- renderText(reviews1[1,]$reviewer)
+      output$reviewDate1 <- renderText(reviews1[1,]$time_created)
+      output$reviewStars1 <- renderText(paste("Rating:", makeStars(reviews1[1,]$rating)))
+    }
+    if(nrow(reviews1) >= 2){
+      output$reviewtext2 <- renderText(reviews1[2,]$text)
+    }
+    if(nrow(reviews1) >= 3){
+      output$reviewtext3 <- renderText(reviews1[3,]$text)
+    }
+    # for(i in 1:nrow(reviews1)){
+    #   assign(paste("output$reviewtext",i, sep = ""), renderText(reviews1[i,]$text))
+    #   # output$reviewtext1 <- renderText(reviews1[i,]$text)
+    # }
+    output$review <- renderDataTable(DT::datatable(reviews1, escape = FALSE, selection ="none"))
     
     
   })
@@ -221,26 +244,33 @@ function(input, output, session){
   ##  POPULAR RESTAURANTS 
   
   observeEvent(input$popular_button, {
+    # Creates a new data frame to store Yelp business information requested from the API
+    business.info <- data.frame()
+    
+    # This loop iterates over 20 times to obtain information from the YELP API(because YELP API only returns a maximum of 50 rows 
+    # per GET request and up to a 1000 rows as a whole)
+    # !! This may take a while due to the fact that 20 GET requests has to be made
+    for (i in 1:20) {
+      data <- requestData(i)
+      business.info <- rbind(business.info, data)
+    }
+    
+    coln <- as.numeric(input$factor)
+    business.info <- business.info[with(business.info,order(-review_count)),]
+    business.info <- business.info[1:7,]
+    business.info = business.info %>%
+      select(name, rating, price, review_count)
+    
     output$popular <- renderPlot({
-      # Creates a new data frame to store Yelp business information requested from the API
-      business.info <- data.frame()
-      
-      # This loop iterates over 20 times to obtain information from the YELP API(because YELP API only returns a maximum of 50 rows 
-      # per GET request and up to a 1000 rows as a whole)
-      # !! This may take a while due to the fact that 20 GET requests has to be made
-      for (i in 1:20) {
-        data <- requestData(i)
-        business.info <- rbind(business.info, data)
+      if (coln == 2) {
+        ggplot(business.info, aes(x = name, y = rating)) + geom_bar(stat = "identity") + labs(x="Most Popular restaurants", y=colnames(business.info[coln])) + 
+          ggtitle(paste0("Ratings of most talked about restaurants in ",input$search_location)) + theme(plot.title = element_text(size = 20, face = "bold", hjust= 0.5)) +
+          scale_x_discrete()
+      } else {
+        ggplot(business.info, aes(x = name, y = price)) + geom_bar(stat = "identity") + labs(x="Most Popular restaurants", y=colnames(business.info[coln])) + 
+          ggtitle(paste0("Prices of most talked about restaurants in ",input$search_location)) + theme(plot.title = element_text(size = 20, face = "bold", hjust= 0.5)) +
+          scale_x_discrete()
       }
-      
-      business.info <- business.info[with(business.info,order(-review_count)),]
-      business.info <- business.info[1:7,]
-      business.info = business.info %>%
-        select(name, rating, price, review_count)
-      
-      ggplot(business.info, aes(x = name, y = input$factor)) + geom_bar(stat = "identity") + labs(x="Most Popular restaurants", y=input$factor) + 
-        ggtitle(paste0(input$factor, " of most talked about restaurants in ",input$search_location_categories)) + theme(plot.title = element_text(size = 20, face = "bold", hjust= 0.5))
-      
     })
   })
   
