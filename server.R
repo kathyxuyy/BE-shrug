@@ -145,21 +145,21 @@ function(input, output, session){
   
   ######################################################################################################################################################################
   
-  ## TOP 6 CATEGORIES TAB
+  # This function requests business information from the YELP api and takes in parameter n for offsetting the list of returned businesses.
+  requestData <- function(n) {
+    path = "businesses/search" 
+    query.params = list(term = "food", location = input$search_location_categories, limit=50, offset=50*n-50)
+    response <- GET(url = paste(base_yelp_url, path, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
+    body <- content(response, "text")
+    data <- fromJSON(body)
+    suppressWarnings(compressed <- flatten(data[[1]]))
+    return (compressed)
+  }
+  
+  ## CATEGORIES TAB
   
   observeEvent(input$analysis_button, {
     output$analytics <- renderPlot({
-      
-      # This function requests business information from the YELP api and takes in parameter n for offsetting the list of returned businesses.
-      requestData <- function(n) {
-        path = "businesses/search" 
-        query.params = list(term = "food", location = input$search_location, limit=50, offset=50*n-50)
-        response <- GET(url = paste(base_yelp_url, path, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
-        body <- content(response, "text")
-        data <- fromJSON(body)
-        suppressWarnings(compressed <- flatten(data[[1]]))
-        return (compressed)
-      }
       
       # Creates a new data frame to store Yelp business information requested from the API
       business.info <- data.frame()
@@ -192,7 +192,35 @@ function(input, output, session){
       
       # This plots a barplot to display the top 6 Categories for the various locations chosen.
       ggplot(business.categories, aes(x = reorder(title, -count), y = count)) + geom_bar(stat = "identity") + labs(x="Categories", y="Count") +
-        ggtitle(paste0("Top 6 Categories in ", input$search_location)) + theme(plot.title = element_text(size = 30, face = "bold", hjust= 0.5 ))
+        ggtitle(paste0("Most Common Categories in ", input$search_location_categories)) + theme(plot.title = element_text(size = 30, face = "bold", hjust= 0.5 ))
+    })
+  })
+  
+  ######################################################################################################################################################################
+  
+  ##  POPULAR RESTAURANTS 
+  
+  observeEvent(input$popular_button, {
+    output$popular <- renderPlot({
+      # Creates a new data frame to store Yelp business information requested from the API
+      business.info <- data.frame()
+      
+      # This loop iterates over 20 times to obtain information from the YELP API(because YELP API only returns a maximum of 50 rows 
+      # per GET request and up to a 1000 rows as a whole)
+      # !! This may take a while due to the fact that 20 GET requests has to be made
+      for (i in 1:20) {
+        data <- requestData(i)
+        business.info <- rbind(business.info, data)
+      }
+      
+      business.info <- business.info[with(business.info,order(-review_count)),]
+      business.info <- business.info[1:7,]
+      business.info = business.info %>%
+        select(name, rating, price, review_count)
+      
+      ggplot(business.info, aes(x = name, y = input$factor)) + geom_bar(stat = "identity") + labs(x="Most Popular restaurants", y=input$factor) + 
+        ggtitle(paste0(input$factor, " of most talked about restaurants in ",input$search_location_categories)) + theme(plot.title = element_text(size = 20, face = "bold", hjust= 0.5))
+      
     })
   })
   
