@@ -53,24 +53,6 @@ shinyUI(
                        # Creates tab panel for Business Comparison
                        tabPanel("Business Comparison",
                                 
-                                # inputs at side of page       
-                                
-                                # sidebarLayout(
-                                #   sidebarPanel(
-                                #     textInput("name1", "Type business' name here"),
-                                #     textInput("name2", "Type business' name here"),
-                                #     textInput("locationlocation", "Type your location here"),
-                                #     actionButton("compare", label = "", icon = shiny::icon("search"))
-                                #   ),
-                                #   mainPanel(
-                                #     column(12,
-                                #     dataTableOutput("test")
-                                #     ),
-                                #     column(12,
-                                #             dataTableOutput("review")
-                                #     )
-                                #   )
-                                # )
                                 
                                 # inputs at the top of page
                                 fluidRow(

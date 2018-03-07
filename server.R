@@ -111,6 +111,8 @@ function(input, output, session){
   
   ## BUSINESS COMPARISON TAB
   
+  
+  # Function will get location data based on name and location
   get_Data <- function(name, location){
     base_yelp_url <- "https://api.yelp.com/v3/"
     path = "businesses/search"
@@ -125,6 +127,7 @@ function(input, output, session){
     return(compress)
   }
   
+  # Function will get review data taking in a set of data
   getReviews <- function(data){
     base_yelp_url <- "https://api.yelp.com/v3/"
     reviews <- paste("businesses/", data$id, "/reviews", sep = "")
@@ -136,6 +139,7 @@ function(input, output, session){
     return(review_data)
   }
   
+  # Function will make star ratings
   makeStars <- function(num){
     star_rate <- ""
     for(i in 1:num){
@@ -147,6 +151,7 @@ function(input, output, session){
     return(star_rate)
   }
   
+  # Function will get and convert a distance to miles
   getDistance <- function(num){
     dist <- round(num * 0.000621371, digits = 1)
     string <- paste(dist, "mi")
@@ -154,8 +159,8 @@ function(input, output, session){
   }
   
   observeEvent(input$compare, {
-    # output$test <- renderDataTable(DT::datatable(compress1, escape = FALSE, selection = "none"))
     
+    # Horizontal lines for output
     output$line <- renderText("<hr>")
     output$line2 <- renderText("<hr>")
     output$line3 <- renderText("<hr>")
@@ -173,6 +178,7 @@ function(input, output, session){
     output$line15 <- renderText("<hr>")
     output$line16 <- renderText("<hr>")
     
+    # Breaks to output
     output$break1 <- renderText("<br />")
     output$break2 <- renderText("<br />")
     output$break3 <- renderText("<br />")
@@ -186,6 +192,7 @@ function(input, output, session){
     output$break11 <- renderText("<br />")
     output$break12 <- renderText("<br />")
     
+    # titles of sections for left side
     output$Average <- renderText("Average Rating")
     output$reviews <- renderText("Reviews")
     output$address <- renderText("Address:")
@@ -193,6 +200,7 @@ function(input, output, session){
     output$distance <- renderText("Distance:")
     output$phone <- renderText("Phone:")
     
+    # titles of sections for right side
     output$Average1 <- renderText("Average Rating")
     output$reviews1 <- renderText("Reviews")
     output$address1 <- renderText("Address:")
@@ -200,7 +208,7 @@ function(input, output, session){
     output$distance1 <- renderText("Distance:")
     output$phone1 <- renderText("Phone:")
     
-    # Left Side
+    # Left Side data manipulation and outputs
     compress1 <- get_Data(input$name1, input$locationlocation)
     output$bn1 <- renderText(compress1$name)
     output$bi1 <- renderText(compress1$image_url)
@@ -213,7 +221,10 @@ function(input, output, session){
     output$busiPrice1 <- renderText(compress1$price)
     output$busiDist1 <- renderText(getDistance(compress1$distance))
     
+    # Data get forleft  reviews
     reviews1 <- getReviews(compress1)$reviews
+    
+    # First Review Left Side
     if(nrow(reviews1) >= 1){
       output$reviewtext1 <- renderText(reviews1[1,]$text)
       output$more1 <- renderText(reviews1[1,]$url)
@@ -221,6 +232,8 @@ function(input, output, session){
       output$reviewDate1 <- renderText(reviews1[1,]$time_created)
       output$reviewStars1 <- renderText(paste("Rating:", makeStars(reviews1[1,]$rating)))
     }
+    
+    # Second Review Left Side
     if(nrow(reviews1) >= 2){
       output$reviewtext2 <- renderText(reviews1[2,]$text)
       output$more2 <- renderText(reviews1[2,]$url)
@@ -228,6 +241,8 @@ function(input, output, session){
       output$reviewDate2 <- renderText(reviews1[2,]$time_created)
       output$reviewStars2 <- renderText(paste("Rating:", makeStars(reviews1[2,]$rating)))
     }
+    
+    # Third Review Left Side
     if(nrow(reviews1) >= 3){
       output$reviewtext3 <- renderText(reviews1[3,]$text)
       output$more3 <- renderText(reviews1[3,]$url)
@@ -237,7 +252,7 @@ function(input, output, session){
     }
     
     
-    # Right Side
+    # Right Side data manipulation and output
     compress2 <- get_Data(input$name2, input$locationlocation)
     output$bn2 <- renderText(compress2$name)
     output$bi2 <- renderText(compress2$image_url)
@@ -250,7 +265,10 @@ function(input, output, session){
     output$busiPrice2 <- renderText(compress2$price)
     output$busiDist2 <- renderText(getDistance(compress2$distance))
     
+    # Get reviews for right side
     reviews2 <- getReviews(compress2)$reviews
+    
+    # First review for right side
     if(nrow(reviews2) >= 1){
       output$reviewtext4 <- renderText(reviews2[1,]$text)
       output$more4 <- renderText(reviews2[1,]$url)
@@ -258,6 +276,8 @@ function(input, output, session){
       output$reviewDate4 <- renderText(reviews2[1,]$time_created)
       output$reviewStars4 <- renderText(paste("Rating:", makeStars(reviews2[1,]$rating)))
     }
+    
+    # Second review for right side
     if(nrow(reviews2) >= 2){
       output$reviewtext5 <- renderText(reviews2[2,]$text)
       output$more5 <- renderText(reviews2[2,]$url)
@@ -265,6 +285,8 @@ function(input, output, session){
       output$reviewDate5 <- renderText(reviews2[2,]$time_created)
       output$reviewStars5 <- renderText(paste("Rating:", makeStars(reviews2[2,]$rating)))
     }
+    
+    # Third review for right side
     if(nrow(reviews2) >= 3){
       output$reviewtext6 <- renderText(reviews2[3,]$text)
       output$more6 <- renderText(reviews2[3,]$url)
@@ -272,8 +294,6 @@ function(input, output, session){
       output$reviewDate6 <- renderText(reviews2[3,]$time_created)
       output$reviewStars6 <- renderText(paste("Rating:", makeStars(reviews2[3,]$rating)))
     }
-    
-    output$review <- renderDataTable(DT::datatable(compress1, escape = FALSE, selection ="none"))
     
     
   })
