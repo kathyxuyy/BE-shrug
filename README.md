@@ -14,6 +14,6 @@ Our app pulls data from the Yelp Fusion API, https://www.yelp.com/fusion.
 
 # App Link
 
-Our app is deployed at ___.
+Our app is deployed at, https://jit98.shinyapps.io/BE-shrug/
 
 

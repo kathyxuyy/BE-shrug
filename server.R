@@ -56,6 +56,7 @@ function(input, output, session){
   
   ## LOCATION SEARCH TAB
   
+  
   map <- leaflet() %>% addTiles() %>% setView(-101.204687, 40.607628, zoom = 3)
   output$myMap <- renderLeaflet(map)
   
@@ -80,29 +81,29 @@ function(input, output, session){
     } else {
       output$myMap <- renderLeaflet(map %>% 
                                       setView(center[[1]],center[[2]], zoom = 13) %>% 
-                                      addMarkers(lng = business_frame$coordinates.longitude, 
-                                                 lat = business_frame$coordinates.latitude, icon=greenLeafIcon, label = business_frame$name))
+                                      addAwesomeMarkers(lng = business_frame$coordinates.longitude, 
+                                                        lat = business_frame$coordinates.latitude, icon=icons, label = business_frame$name))
     }  
     
     getColor <- function(business_frame) {
       sapply(business_frame$rating, function(rating) {
         if(rating >= 4.5) {
-          "http://leafletjs.com/examples/custom-icons/leaf-green.png"
-        }else if(rating >=3.5 ) {
-          "http://leafletjs.com/examples/custom-icons/leaf-orange.png"
+          "green"
+        } else if(rating >= 3.5) {
+          "orange"
         } else {
-          "http://leafletjs.com/examples/custom-icons/leaf-red.png"
+          "red"
         } })
     }
     
-    greenLeafIcon <- makeIcon(
-      iconUrl = getColor(business_frame),
-      iconWidth = 38, iconHeight = 95,
-      iconAnchorX = 22, iconAnchorY = 94,
-      shadowUrl = "http://leafletjs.com/examples/custom-icons/leaf-shadow.png",
-      shadowWidth = 50, shadowHeight = 64,
-      shadowAnchorX = 4, shadowAnchorY = 62
+    icons <- awesomeIcons(
+      icon = 'ios-close',
+      iconColor = 'black',
+      library = 'ion',
+      markerColor = getColor(business_frame)
     )
+    
+    
     
   })
   

@@ -1,0 +1,12 @@
+name: BE-shrug
+title: BE-shrug
+username:
+account: jit98
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 295390
+bundleId: 1257898
+url: https://jit98.shinyapps.io/BE-shrug/
+when: 1520462721.56016
+asMultiple: FALSE
+asStatic: FALSE
