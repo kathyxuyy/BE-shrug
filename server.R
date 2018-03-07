@@ -123,8 +123,9 @@ function(input, output, session){
   }
   
   getReviews <- function(data){
+    base_yelp_url <- "https://api.yelp.com/v3/"
     reviews <- paste("businesses/", data$id, "/reviews", sep = "")
-    response <- GET(url = paste(base_yelp_url, reviews, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
+    response <- GET(url = paste(base_yelp_url, reviews, sep = ""), add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
     body <- content(response, "text")
     review_data <- fromJSON(body)
     review_data$reviews$reviewer <- review_data$reviews$user$name

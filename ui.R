@@ -85,7 +85,7 @@ shinyUI(
                                 ),
                                 
                                 fluidRow(
-                                  column(6, 
+                                  column(6, id = "black",
                                          h2(textOutput("bn1")),
                                          htmlOutput("bi1"),
                                          htmlOutput("line"),
@@ -148,7 +148,7 @@ shinyUI(
                                            )
                                          )
                                   ),
-                                  column(6, 
+                                  column(6,
                                          h2(textOutput("bn2")),
                                          htmlOutput("bi2"),
                                          htmlOutput("line8"),
