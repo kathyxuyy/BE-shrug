@@ -120,9 +120,9 @@ shinyUI(
                                            div(
                                              textOutput("reviewtext1"),
                                              htmlOutput("more1"),
-                                             tags$br(),
+                                             # tags$br(),
                                              h4(textOutput("reviewStars1")),
-                                             tags$br(),
+                                             # tags$br(),
                                              textOutput("reviewName1"),
                                              textOutput("reviewDate1")
                                            ),
@@ -130,9 +130,9 @@ shinyUI(
                                            div(
                                              textOutput("reviewtext2"),
                                              htmlOutput("more2"),
-                                             tags$br(),
+                                             # tags$br(),
                                              h4(textOutput("reviewStars2")),
-                                             tags$br(),
+                                             # tags$br(),
                                              textOutput("reviewName2"),
                                              textOutput("reviewDate2")
                                            ),
@@ -140,9 +140,9 @@ shinyUI(
                                            div(
                                              textOutput("reviewtext3"),
                                              htmlOutput("more3"),
-                                             tags$br(),
+                                             # tags$br(),
                                              h4(textOutput("reviewStars3")),
-                                             tags$br(),
+                                             # tags$br(),
                                              textOutput("reviewName3"),
                                              textOutput("reviewDate3")
                                            )
