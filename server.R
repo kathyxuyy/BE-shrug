@@ -348,12 +348,18 @@ function(input, output, session){
     }
     
     coln <- as.numeric(input$factor)
+    
+    # This alters the business.info dataset keeping business with the top 7 highest no. of reviews
     business.info <- business.info[with(business.info,order(-review_count)),]
     business.info <- business.info[1:7,]
+    
+    # This removes all the other rows besides name, rating, price and review_count
     business.info = business.info %>%
       select(name, rating, price, review_count)
     
+    # This renders the bar plot to the ui.R file
     output$popular <- renderPlot({
+      # Changes the y-axis based on the input selected on the UI page
       if (coln == 2) {
         ggplot(business.info, aes(x = name, y = rating)) + geom_bar(stat = "identity") + labs(x="Most Popular restaurants", y=colnames(business.info[coln])) + 
           ggtitle(paste0("Ratings of most talked about restaurants in ",input$search_location)) + theme(plot.title = element_text(size = 20, face = "bold", hjust= 0.5)) +
