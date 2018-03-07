@@ -35,7 +35,7 @@ shinyUI(
                                     textInput("location_box", "Type your location here"),
                                     
                                     #filters for the map: price, 
-                                    radioButtons("business_filter", label = "Prices", choices = list("No Preference" = "", "$ (less than $10)", "$$ (between $11 and $30)", "$$$ (between $31 and $60)", "$$$$ (more than $61)")),
+                                    radioButtons("business_filter", label = "Prices", choices = list("No Preference" = "", "$", "$$", "$$$", "$$$$")),
                                     actionButton("location_button", label = "", icon = shiny::icon("search"))
                                   ),
                                   
@@ -104,35 +104,33 @@ shinyUI(
                                 )
                        ),
                        
-                       # Creates tab panel for top 6 categories
-                       tabPanel("Top 6 Categories",
+                       # Creates tab panel for Categories
+                       tabPanel("Categories",
                                 sidebarLayout(
                                   sidebarPanel(
-                                    textInput("search_location", "Enter a location:", value = "Seattle"),
+                                    textInput("search_location_categories", "Enter a location:", value = "Seattle"),
                                     actionButton("analysis_button", label = "", icon = shiny::icon("search"))
                                   ),
                                   mainPanel(
                                     plotOutput("analytics")
                                   )
-                                  
                                 )         
-                                
                        ),
                        
-                       # Creates tab panel for Most Popular
-                       tabPanel("Most Popular",
+                       # Creates tab panel for Popular Restaurants
+                       tabPanel("Popular Restaurants",
                                 sidebarLayout(
                                   sidebarPanel(
                                     textInput("search_location", "Enter a location:", value = "Seattle"),
-                                    actionButton("analysis_button", label = "", icon = shiny::icon("search"))
+                                    radioButtons("factor", label = "", choices = list("price", "rating")),
+                                    actionButton("popular_button", label = "", icon = shiny::icon("search"))
                                   ),
                                   mainPanel(
-                                    plotOutput("popularity")
+                                    plotOutput("popular")
                                   )
-                                  
                                 )         
-                                
                        )
             )
   )
 )
+
