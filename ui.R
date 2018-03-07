@@ -5,7 +5,9 @@ library(shiny)
 library(DT)
 
 shinyUI(
-  fluidPage(theme = "bootstrap.css", class = "sure",
+  fluidPage(
+    #theme = "bootstrap.css", 
+    class = "sure",
             includeCSS("style.css"),
             navbarPage("Yelp Business", id = "no", inverse = TRUE,
                        
@@ -86,12 +88,14 @@ shinyUI(
                                   column(6, 
                                          h2(textOutput("bn1")),
                                          htmlOutput("bi1"),
+                                         htmlOutput("line"),
                                          textOutput("phone"),
                                          textOutput("bp1"),
                                          textOutput("address"),
                                          textOutput("ba1p1"),
                                          textOutput("ba1p3"),
                                          textOutput("ba1p2"),
+                                         h2(textOutput("reviews")),
                                          h3(textOutput("star"))
                                   ),
                                   column(6, dataTableOutput("test"))

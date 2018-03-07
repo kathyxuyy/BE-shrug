@@ -1,3 +1,4 @@
+
 # server.R file
 
 library(dplyr)
@@ -107,38 +108,54 @@ function(input, output, session){
   
   ## BUSINESS COMPARISON TAB
   
-  observeEvent(input$compare, {
-    query.params = list(term = input$name1, location = input$locationlocation, limit = 1)
-    business_data <- getData(query.params)
+  get_Data <- function(name, location){
+    base_yelp_url <- "https://api.yelp.com/v3/"
+    path = "businesses/search"
+    query.params = list(term = name, location = location, limit = 1)
+    response <- GET(url = paste(base_yelp_url, path, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
+    body <- content(response, "text")
+    business_data <- fromJSON(body)
     
     compress <- flatten(business_data[[1]]) %>% select(-categories, -location.display_address, -categories, -transactions, -coordinates.latitude, -coordinates.longitude)
     compress$image_url <- paste("<img src='", compress$image_url, "' height = '250'</img>", sep = "")
     compress$url <- paste0("<a href='", compress$url, "' class = 'button'>Website</a>")
-    output$test <- renderDataTable(DT::datatable(compress, escape = FALSE, selection = "none"))
-    output$bn1 <- renderText(compress$name)
-    output$bi1 <- renderText(compress$image_url)
-    # output$bp1 <- renderText(paste("Phone:", compress$display_phone))
+    return(compress)
+  }
+  
+  # getReviews <- function(data){
+  #   reviews <- paste("businesses/", data$id, "/reviews", sep = "")
+  #   response <- GET(url = paste(base_yelp_url, reviews, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
+  #   body <- content(response, "text")
+  #   review_data <- fromJSON(body)
+  #   review_data$reviews$reviewer <- review_data$reviews$user$name
+  #   return(review_data)
+  # }
+  
+  observeEvent(input$compare, {
+    compress1 <- get_Data(input$name1, input$locationlocation)
+    output$test <- renderDataTable(DT::datatable(compress1, escape = FALSE, selection = "none"))
+    output$bn1 <- renderText(compress1$name)
+    output$bi1 <- renderText(compress1$image_url)
+    output$bp1 <- renderText(paste("Phone:", compress$display_phone))
+    output$line <- renderText("<hr>")
+    output$reviews <- renderText("Reviews")
     output$address <- renderText("Address:")
     output$phone <- renderText("Phone:")
     star_rate <- ""
-    for(i in 1:compress$rating){
+    for(i in 1:compress1$rating){
       star_rate <- paste(star_rate, "*", sep = "")
     }
-    if(compress$rating %% 1 == 0.5){
+    if(compress1$rating %% 1 == 0.5){
       star_rate <- paste(star_rate, ".5", sep = "")
     }
     output$star <- renderText(star_rate)
-    output$bp1 <- renderText(compress$display_phone)
-    output$ba1p1 <- renderText(compress$location.address1)
-    output$ba1p3 <- renderText(paste(compress$location.address2, compress$location.address3))
-    output$ba1p2 <- renderText(paste(compress$location.zipcode, " ", compress$location.city, ", ", compress$location.state, ", ", compress$location.country, sep = ""))
+    output$bp1 <- renderText(compress1$display_phone)
+    output$ba1p1 <- renderText(compress1$location.address1)
+    output$ba1p3 <- renderText(paste(compress1$location.address2, compress1$location.address3))
+    output$ba1p2 <- renderText(paste(compress1$location.zipcode, " ", compress1$location.city, ", ", compress1$location.state, ", ", compress1$location.country, sep = ""))
     
-    reviews <- paste("businesses/", compress$id, "/reviews", sep = "")
-    response <- GET(url = paste(base_yelp_url, reviews, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
-    body <- content(response, "text")
-    review_data <- fromJSON(body)
-    review_data$reviews$reviewer <- review_data$reviews$user$name
-    output$review <- renderDataTable(DT::datatable(review_data$reviews, escape = FALSE, selection ="none"))
+    # reviews1 <- getReviews(compress1$id)
+    # output$review <- renderDataTable(DT::datatable(reviews1$reviews, escape = FALSE, selection ="none"))
     
     
   })
