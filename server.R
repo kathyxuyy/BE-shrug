@@ -14,6 +14,9 @@ source("key.R")
 
 function(input, output, session){
   base_yelp_url <- "https://api.yelp.com/v3/"
+  
+  ## BUSINESS SEARCH TAB
+  
   observeEvent(input$search_button, {
     path = "businesses/search" 
     query.params = list(term = input$search_input, location = input$location_input, limit = 50)
@@ -39,6 +42,10 @@ function(input, output, session){
     output$businesses <- renderDataTable(DT::datatable(compress, escape = FALSE, selection = "none"))
     
   })
+  
+  ######################################################################################################################################################################
+  
+  ## LOCATION SEARCH TAB
   
   map <- leaflet() %>% addTiles() %>% setView(-101.204687, 40.607628, zoom = 3)
   output$myMap <- renderLeaflet(map)
@@ -92,6 +99,10 @@ function(input, output, session){
     
   })
   
+  ######################################################################################################################################################################
+  
+  ## BUSINESS COMPARISON TAB
+  
   observeEvent(input$compare, {
     base_yelp_url <- "https://api.yelp.com/v3/"
     path = "businesses/search"
@@ -132,7 +143,9 @@ function(input, output, session){
     
   })
   
+  ######################################################################################################################################################################
   
+  ## LOCATION ANALYSIS TAB
   
   observeEvent(input$analysis_button, {
     output$analytics <- renderPlot({
