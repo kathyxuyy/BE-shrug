@@ -15,14 +15,20 @@ source("key.R")
 function(input, output, session){
   base_yelp_url <- "https://api.yelp.com/v3/"
   
+  # This function requests business information from the YELP API and it takes it the query parameters necessary for the GET request
+  getData <- function(query.params) {
+    path = "businesses/search" 
+    response <- GET(url = paste(base_yelp_url, path, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
+    body <- content(response, "text")
+    data <- fromJSON(body)
+    return (data)
+  }
+  
   ## BUSINESS SEARCH TAB
   
   observeEvent(input$search_button, {
-    path = "businesses/search" 
-    query.params = list(term = input$search_input, location = input$location_input, limit = 50)
-    response <- GET(url = paste(base_yelp_url, path, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
-    body <- content(response, "text")
-    business_data <- fromJSON(body)
+    query.params <- list(term = input$search_input, location = input$location_input, limit = 50)
+    business_data <- getData(query.params)
     
     # this line makes it so the data table can be printed without altering the values in these columns
     # they are normally in a form of a list and idk how to change them to string, to be fixed eventually
@@ -54,11 +60,9 @@ function(input, output, session){
   center <- vector("list")
   
   observeEvent(input$location_button, {
-    path = "businesses/search"
     query.params = list(term = input$search_box, location = input$location_box)
-    response <- GET(url = paste(base_yelp_url, path, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
-    body <- content(response, "text")
-    specific_data <- fromJSON(body)
+    specific_data <- getData(query.params)
+
     region <- specific_data[[3]]
     center <- region[[1]]
     
@@ -104,12 +108,8 @@ function(input, output, session){
   ## BUSINESS COMPARISON TAB
   
   observeEvent(input$compare, {
-    base_yelp_url <- "https://api.yelp.com/v3/"
-    path = "businesses/search"
     query.params = list(term = input$name1, location = input$locationlocation, limit = 1)
-    response <- GET(url = paste(base_yelp_url, path, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
-    body <- content(response, "text")
-    business_data <- fromJSON(body)
+    business_data <- getData(query.params)
     
     compress <- flatten(business_data[[1]]) %>% select(-categories, -location.display_address, -categories, -transactions, -coordinates.latitude, -coordinates.longitude)
     compress$image_url <- paste("<img src='", compress$image_url, "' height = '250'</img>", sep = "")
@@ -145,12 +145,12 @@ function(input, output, session){
   
   ######################################################################################################################################################################
   
-  ## LOCATION ANALYSIS TAB
+  ## TOP 6 CATEGORIES TAB
   
   observeEvent(input$analysis_button, {
     output$analytics <- renderPlot({
       
-      # This function requests business information from the YELP api
+      # This function requests business information from the YELP api and takes in parameter n for offsetting the list of returned businesses.
       requestData <- function(n) {
         path = "businesses/search" 
         query.params = list(term = "food", location = input$search_location, limit=50, offset=50*n-50)

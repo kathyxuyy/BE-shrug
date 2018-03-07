@@ -8,6 +8,8 @@ shinyUI(
   fluidPage(theme = "bootstrap.css", class = "sure",
             includeCSS("style.css"),
             navbarPage("Yelp Business", id = "no", inverse = TRUE,
+                       
+                       # Creates a tab panel for Business Search
                        tabPanel("Business Search",
                                 sidebarLayout(
                                   
@@ -23,6 +25,7 @@ shinyUI(
                                 )
                        ),  
                        
+                       # Creates a tab panel for Location Search
                        tabPanel("Location Search",
                                 sidebarLayout(
                                   sidebarPanel(
@@ -30,7 +33,7 @@ shinyUI(
                                     textInput("location_box", "Type your location here"),
                                     
                                     #filters for the map: price, 
-                                    radioButtons("business_filter", label = "Prices", choices = list("No Preference" = "", "$", "$$", "$$$", "$$$$")),
+                                    radioButtons("business_filter", label = "Prices", choices = list("No Preference" = "", "$ (less than $10)", "$$ (between $11 and $30)", "$$$ (between $31 and $60)", "$$$$ (more than $61)")),
                                     actionButton("location_button", label = "", icon = shiny::icon("search"))
                                   ),
                                   
@@ -41,6 +44,7 @@ shinyUI(
                                 )
                        ),
                        
+                       # Creates tab panel for Business Comparison
                        tabPanel("Business Comparison",
                                 
                                 # inputs at side of page       
@@ -94,8 +98,8 @@ shinyUI(
                                 )
                        ),
                        
-                       
-                       tabPanel("Location Analytics",
+                       # Creates tab panel for top 6 categories
+                       tabPanel("Top 6 Categories",
                                 sidebarLayout(
                                   sidebarPanel(
                                     textInput("search_location", "Enter a location:", value = "Seattle"),
@@ -103,6 +107,21 @@ shinyUI(
                                   ),
                                   mainPanel(
                                     plotOutput("analytics")
+                                  )
+                                  
+                                )         
+                                
+                       ),
+                       
+                       # Creates tab panel for Most Popular
+                       tabPanel("Most Popular",
+                                sidebarLayout(
+                                  sidebarPanel(
+                                    textInput("search_location", "Enter a location:", value = "Seattle"),
+                                    actionButton("analysis_button", label = "", icon = shiny::icon("search"))
+                                  ),
+                                  mainPanel(
+                                    plotOutput("popularity")
                                   )
                                   
                                 )         
