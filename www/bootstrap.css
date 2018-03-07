@@ -22,10 +22,12 @@ font-family: "Times New Roman";
 //fount-family: "Impact";
 //}
 
-#black {
+#right {
 border-right: 5px solid black;
-height: 100%;
-min-height: 100%;
+}
+
+#left {
+border-left: 5px solid black;
 }
 
 #compare {

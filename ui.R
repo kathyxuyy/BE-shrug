@@ -22,7 +22,10 @@ shinyUI(
                                     
                                   ),
                                   mainPanel(id = "yes",
-                                            dataTableOutput("businesses")
+                                    h3(textOutput("tableInfo"),
+                                       tags$style(type="text/css", "#tableInfo { height: 50px; width: 100%; text-align:center; display: block; font-weight: bold; }")
+                                    ),
+                                    dataTableOutput("businesses")
                                   )
                                 )
                        ),  
@@ -85,7 +88,7 @@ shinyUI(
                                 ),
                                 
                                 fluidRow(
-                                  column(6, id = "black",
+                                  column(6, id = "right",
                                          h2(textOutput("bn1")),
                                          htmlOutput("bi1"),
                                          htmlOutput("line"),
@@ -115,14 +118,15 @@ shinyUI(
                                            textOutput("Average"),
                                            h4(textOutput("star1"))
                                          ),
+                                         htmlOutput("line15"),
                                          h3(textOutput("reviews")),
                                          div(
                                            div(
                                              textOutput("reviewtext1"),
                                              htmlOutput("more1"),
-                                             # tags$br(),
+                                             htmlOutput("break1"),
                                              h4(textOutput("reviewStars1")),
-                                             # tags$br(),
+                                             htmlOutput("break2"),
                                              textOutput("reviewName1"),
                                              textOutput("reviewDate1")
                                            ),
@@ -130,9 +134,9 @@ shinyUI(
                                            div(
                                              textOutput("reviewtext2"),
                                              htmlOutput("more2"),
-                                             # tags$br(),
+                                             htmlOutput("break3"),
                                              h4(textOutput("reviewStars2")),
-                                             # tags$br(),
+                                             htmlOutput("break4"),
                                              textOutput("reviewName2"),
                                              textOutput("reviewDate2")
                                            ),
@@ -140,15 +144,15 @@ shinyUI(
                                            div(
                                              textOutput("reviewtext3"),
                                              htmlOutput("more3"),
-                                             # tags$br(),
+                                             htmlOutput("break5"),
                                              h4(textOutput("reviewStars3")),
-                                             # tags$br(),
+                                             htmlOutput("break6"),
                                              textOutput("reviewName3"),
                                              textOutput("reviewDate3")
                                            )
                                          )
                                   ),
-                                  column(6,
+                                  column(6, id = "left",
                                          h2(textOutput("bn2")),
                                          htmlOutput("bi2"),
                                          htmlOutput("line8"),
@@ -178,14 +182,15 @@ shinyUI(
                                            textOutput("Average1"),
                                            h4(textOutput("star2"))
                                          ),
+                                         htmlOutput("line16"),
                                          h3(textOutput("reviews1")),
                                          div(
                                            div(
                                              textOutput("reviewtext4"),
                                              htmlOutput("more4"),
-                                             tags$br(),
+                                             htmlOutput("break7"),
                                              h4(textOutput("reviewStars4")),
-                                             tags$br(),
+                                             htmlOutput("break8"),
                                              textOutput("reviewName4"),
                                              textOutput("reviewDate4")
                                            ),
@@ -193,9 +198,9 @@ shinyUI(
                                            div(
                                              textOutput("reviewtext5"),
                                              htmlOutput("more5"),
-                                             tags$br(),
+                                             htmlOutput("break9"),
                                              h4(textOutput("reviewStars5")),
-                                             tags$br(),
+                                             htmlOutput("break10"),
                                              textOutput("reviewName5"),
                                              textOutput("reviewDate5")
                                            ),
@@ -203,9 +208,9 @@ shinyUI(
                                            div(
                                              textOutput("reviewtext6"),
                                              htmlOutput("more6"),
-                                             tags$br(),
+                                             htmlOutput("break11"),
                                              h4(textOutput("reviewStars6")),
-                                             tags$br(),
+                                             htmlOutput("break12"),
                                              textOutput("reviewName6"),
                                              textOutput("reviewDate6")
                                            )
