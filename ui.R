@@ -120,7 +120,7 @@ shinyUI(
                                 sidebarLayout(
                                   sidebarPanel(
                                     textInput("search_location", "Enter a location:", value = "Seattle"),
-                                    radioButtons("factor", label = "", choices = list("price", "rating")),
+                                    radioButtons("factor", label = "", choices = list("rating" = 2, "price" = 3)),
                                     actionButton("popular_button", label = "", icon = shiny::icon("search"))
                                   ),
                                   mainPanel(

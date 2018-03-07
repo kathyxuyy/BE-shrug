@@ -218,26 +218,33 @@ function(input, output, session){
   ##  POPULAR RESTAURANTS 
   
   observeEvent(input$popular_button, {
+    # Creates a new data frame to store Yelp business information requested from the API
+    business.info <- data.frame()
+    
+    # This loop iterates over 20 times to obtain information from the YELP API(because YELP API only returns a maximum of 50 rows 
+    # per GET request and up to a 1000 rows as a whole)
+    # !! This may take a while due to the fact that 20 GET requests has to be made
+    for (i in 1:20) {
+      data <- requestData(i)
+      business.info <- rbind(business.info, data)
+    }
+    
+    coln <- as.numeric(input$factor)
+    business.info <- business.info[with(business.info,order(-review_count)),]
+    business.info <- business.info[1:7,]
+    business.info = business.info %>%
+      select(name, rating, price, review_count)
+    
     output$popular <- renderPlot({
-      # Creates a new data frame to store Yelp business information requested from the API
-      business.info <- data.frame()
-      
-      # This loop iterates over 20 times to obtain information from the YELP API(because YELP API only returns a maximum of 50 rows 
-      # per GET request and up to a 1000 rows as a whole)
-      # !! This may take a while due to the fact that 20 GET requests has to be made
-      for (i in 1:20) {
-        data <- requestData(i)
-        business.info <- rbind(business.info, data)
+      if (coln == 2) {
+        ggplot(business.info, aes(x = name, y = rating)) + geom_bar(stat = "identity") + labs(x="Most Popular restaurants", y=colnames(business.info[coln])) + 
+          ggtitle(paste0("Ratings of most talked about restaurants in ",input$search_location)) + theme(plot.title = element_text(size = 20, face = "bold", hjust= 0.5)) +
+          scale_x_discrete()
+      } else {
+        ggplot(business.info, aes(x = name, y = price)) + geom_bar(stat = "identity") + labs(x="Most Popular restaurants", y=colnames(business.info[coln])) + 
+          ggtitle(paste0("Prices of most talked about restaurants in ",input$search_location)) + theme(plot.title = element_text(size = 20, face = "bold", hjust= 0.5)) +
+          scale_x_discrete()
       }
-      
-      business.info <- business.info[with(business.info,order(-review_count)),]
-      business.info <- business.info[1:7,]
-      business.info = business.info %>%
-        select(name, rating, price, review_count)
-      
-      ggplot(business.info, aes(x = name, y = input$factor)) + geom_bar(stat = "identity") + labs(x="Most Popular restaurants", y=input$factor) + 
-        ggtitle(paste0(input$factor, " of most talked about restaurants in ",input$search_location_categories)) + theme(plot.title = element_text(size = 20, face = "bold", hjust= 0.5))
-      
     })
   })
   
