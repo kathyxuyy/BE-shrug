@@ -22,7 +22,10 @@ shinyUI(
                                     
                                   ),
                                   mainPanel(id = "yes",
-                                            dataTableOutput("businesses")
+                                    h3(textOutput("tableInfo"),
+                                       tags$style(type="text/css", "#tableInfo { height: 50px; width: 100%; text-align:center; display: block; font-weight: bold; }")
+                                    ),
+                                    dataTableOutput("businesses")
                                   )
                                 )
                        ),  

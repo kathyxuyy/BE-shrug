@@ -27,6 +27,8 @@ function(input, output, session){
   
   ## BUSINESS SEARCH TAB
   
+  output$tableInfo <- renderText("Business Data Will Appear Here")
+  
   observeEvent(input$search_button, {
     query.params <- list(term = input$search_input, location = input$location_input, limit = 50)
     business_data <- getData(query.params)
@@ -47,6 +49,8 @@ function(input, output, session){
     colnames(compress) <- c("Name", "Image", "Yelp Link", "Review Count", "Rating", "Price", "Phone", "Address")
     
     output$businesses <- renderDataTable(DT::datatable(compress, escape = FALSE, selection = "none"))
+    output$tableInfo <- renderText(paste0(toupper(substring(input$search_input, 1,1)), 
+                                          substring(input$search_input, 2), " in ", toupper(substring(input$location_input, 1,1)), substring(input$location_input, 2)))
     
   })
   
