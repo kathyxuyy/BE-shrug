@@ -143,25 +143,56 @@ function(input, output, session){
     return(star_rate)
   }
   
+  getDistance <- function(num){
+    dist <- round(num * 0.000621371, digits = 1)
+    string <- paste(dist, "mi")
+    return(string)
+  }
+  
   observeEvent(input$compare, {
-    compress1 <- get_Data(input$name1, input$locationlocation)
-    output$test <- renderDataTable(DT::datatable(compress1, escape = FALSE, selection = "none"))
-    output$bn1 <- renderText(compress1$name)
-    output$bi1 <- renderText(compress1$image_url)
-    output$bp1 <- renderText(paste("Phone:", compress$display_phone))
+    # output$test <- renderDataTable(DT::datatable(compress1, escape = FALSE, selection = "none"))
+    
     output$line <- renderText("<hr>")
     output$line2 <- renderText("<hr>")
     output$line3 <- renderText("<hr>")
+    output$line4 <- renderText("<hr>")
+    output$line5 <- renderText("<hr>")
+    output$line6 <- renderText("<hr>")
+    output$line7 <- renderText("<hr>")
+    output$line8 <- renderText("<hr>")
+    output$line9 <- renderText("<hr>")
+    output$line10 <- renderText("<hr>")
+    output$line11 <- renderText("<hr>")
+    output$line12 <- renderText("<hr>")
+    output$line13 <- renderText("<hr>")
+    output$line14 <- renderText("<hr>")
+    
     output$Average <- renderText("Average Rating")
     output$reviews <- renderText("Reviews")
     output$address <- renderText("Address:")
+    output$price <- renderText("Price Rating:")
+    output$distance <- renderText("Distance:")
     output$phone <- renderText("Phone:")
     
-    output$star <- renderText(makeStars(compress1$rating))
+    output$Average1 <- renderText("Average Rating")
+    output$reviews1 <- renderText("Reviews")
+    output$address1 <- renderText("Address:")
+    output$price1 <- renderText("Price Rating:")
+    output$distance1 <- renderText("Distance:")
+    output$phone1 <- renderText("Phone:")
+    
+    # Left Side
+    compress1 <- get_Data(input$name1, input$locationlocation)
+    output$bn1 <- renderText(compress1$name)
+    output$bi1 <- renderText(compress1$image_url)
+    output$bp1 <- renderText(paste("Phone:", compress$display_phone))
+    output$star1 <- renderText(makeStars(compress1$rating))
     output$bp1 <- renderText(compress1$display_phone)
     output$ba1p1 <- renderText(compress1$location.address1)
     output$ba1p3 <- renderText(paste(compress1$location.address2, compress1$location.address3))
     output$ba1p2 <- renderText(paste(compress1$location.zipcode, " ", compress1$location.city, ", ", compress1$location.state, ", ", compress1$location.country, sep = ""))
+    output$busiPrice1 <- renderText(compress1$price)
+    output$busiDist1 <- renderText(getDistance(compress1$distance))
     
     reviews1 <- getReviews(compress1)$reviews
     if(nrow(reviews1) >= 1){
@@ -173,15 +204,57 @@ function(input, output, session){
     }
     if(nrow(reviews1) >= 2){
       output$reviewtext2 <- renderText(reviews1[2,]$text)
+      output$more2 <- renderText(reviews1[2,]$url)
+      output$reviewName2 <- renderText(reviews1[2,]$reviewer)
+      output$reviewDate2 <- renderText(reviews1[2,]$time_created)
+      output$reviewStars2 <- renderText(paste("Rating:", makeStars(reviews1[2,]$rating)))
     }
     if(nrow(reviews1) >= 3){
       output$reviewtext3 <- renderText(reviews1[3,]$text)
+      output$more3 <- renderText(reviews1[3,]$url)
+      output$reviewName3 <- renderText(reviews1[3,]$reviewer)
+      output$reviewDate3 <- renderText(reviews1[3,]$time_created)
+      output$reviewStars3 <- renderText(paste("Rating:", makeStars(reviews1[3,]$rating)))
     }
-    # for(i in 1:nrow(reviews1)){
-    #   assign(paste("output$reviewtext",i, sep = ""), renderText(reviews1[i,]$text))
-    #   # output$reviewtext1 <- renderText(reviews1[i,]$text)
-    # }
-    output$review <- renderDataTable(DT::datatable(reviews1, escape = FALSE, selection ="none"))
+    
+    
+    # Right Side
+    compress2 <- get_Data(input$name2, input$locationlocation)
+    output$bn2 <- renderText(compress2$name)
+    output$bi2 <- renderText(compress2$image_url)
+    output$bp2 <- renderText(paste("Phone:", compress$display_phone))
+    output$star2 <- renderText(makeStars(compress2$rating))
+    output$bp2 <- renderText(compress2$display_phone)
+    output$ba2p1 <- renderText(compress2$location.address1)
+    output$ba2p3 <- renderText(paste(compress2$location.address2, compress2$location.address3))
+    output$ba2p2 <- renderText(paste(compress2$location.zipcode, " ", compress2$location.city, ", ", compress2$location.state, ", ", compress2$location.country, sep = ""))
+    output$busiPrice2 <- renderText(compress2$price)
+    output$busiDist2 <- renderText(getDistance(compress2$distance))
+    
+    reviews2 <- getReviews(compress2)$reviews
+    if(nrow(reviews2) >= 1){
+      output$reviewtext4 <- renderText(reviews2[1,]$text)
+      output$more4 <- renderText(reviews2[1,]$url)
+      output$reviewName4 <- renderText(reviews2[1,]$reviewer)
+      output$reviewDate4 <- renderText(reviews2[1,]$time_created)
+      output$reviewStars4 <- renderText(paste("Rating:", makeStars(reviews2[1,]$rating)))
+    }
+    if(nrow(reviews2) >= 2){
+      output$reviewtext5 <- renderText(reviews2[2,]$text)
+      output$more5 <- renderText(reviews2[2,]$url)
+      output$reviewName5 <- renderText(reviews2[2,]$reviewer)
+      output$reviewDate5 <- renderText(reviews2[2,]$time_created)
+      output$reviewStars5 <- renderText(paste("Rating:", makeStars(reviews2[2,]$rating)))
+    }
+    if(nrow(reviews2) >= 3){
+      output$reviewtext6 <- renderText(reviews2[3,]$text)
+      output$more6 <- renderText(reviews2[3,]$url)
+      output$reviewName6 <- renderText(reviews2[3,]$reviewer)
+      output$reviewDate6 <- renderText(reviews2[3,]$time_created)
+      output$reviewStars6 <- renderText(paste("Rating:", makeStars(reviews2[3,]$rating)))
+    }
+    
+    output$review <- renderDataTable(DT::datatable(compress1, escape = FALSE, selection ="none"))
     
     
   })

@@ -6,7 +6,7 @@ library(DT)
 
 shinyUI(
   fluidPage(
-    #theme = "bootstrap.css", 
+    theme = "bootstrap.css", 
     class = "sure",
             includeCSS("style.css"),
             navbarPage("Yelp Business", id = "no", inverse = TRUE,
@@ -89,27 +89,128 @@ shinyUI(
                                          h2(textOutput("bn1")),
                                          htmlOutput("bi1"),
                                          htmlOutput("line"),
-                                         textOutput("phone"),
-                                         textOutput("bp1"),
+                                         div(
+                                           textOutput("phone"),
+                                           textOutput("bp1")
+                                         ),
                                          htmlOutput("line2"),
-                                         textOutput("address"),
-                                         textOutput("ba1p1"),
-                                         textOutput("ba1p3"),
-                                         textOutput("ba1p2"),
+                                         div(
+                                           textOutput("address"),
+                                           textOutput("ba1p1"),
+                                           textOutput("ba1p3"),
+                                           textOutput("ba1p2")
+                                         ),
+                                         htmlOutput("line6"),
+                                         div(
+                                           textOutput("distance"),
+                                           textOutput("busiDist1")
+                                         ),
+                                         htmlOutput("line7"),
+                                         div(
+                                           textOutput("price"),
+                                           textOutput("busiPrice1")
+                                         ),
                                          htmlOutput("line3"),
-                                         textOutput("Average"),
-                                         h4(textOutput("star")),
+                                         div(
+                                           textOutput("Average"),
+                                           h4(textOutput("star1"))
+                                         ),
                                          h3(textOutput("reviews")),
-                                         textOutput("reviewtext1"),
-                                         htmlOutput("more1"),
-                                         tags$br(),
-                                         h4(textOutput("reviewStars1")),
-                                         tags$br(),
-                                         textOutput("reviewName1"),
-                                         textOutput("reviewDate1")
-                                         
+                                         div(
+                                           div(
+                                             textOutput("reviewtext1"),
+                                             htmlOutput("more1"),
+                                             tags$br(),
+                                             h4(textOutput("reviewStars1")),
+                                             tags$br(),
+                                             textOutput("reviewName1"),
+                                             textOutput("reviewDate1")
+                                           ),
+                                           htmlOutput("line4"),
+                                           div(
+                                             textOutput("reviewtext2"),
+                                             htmlOutput("more2"),
+                                             tags$br(),
+                                             h4(textOutput("reviewStars2")),
+                                             tags$br(),
+                                             textOutput("reviewName2"),
+                                             textOutput("reviewDate2")
+                                           ),
+                                           htmlOutput("line5"),
+                                           div(
+                                             textOutput("reviewtext3"),
+                                             htmlOutput("more3"),
+                                             tags$br(),
+                                             h4(textOutput("reviewStars3")),
+                                             tags$br(),
+                                             textOutput("reviewName3"),
+                                             textOutput("reviewDate3")
+                                           )
+                                         )
                                   ),
-                                  column(6, dataTableOutput("review"))
+                                  column(6, 
+                                         h2(textOutput("bn2")),
+                                         htmlOutput("bi2"),
+                                         htmlOutput("line8"),
+                                         div(
+                                           textOutput("phone1"),
+                                           textOutput("bp2")
+                                         ),
+                                         htmlOutput("line9"),
+                                         div(
+                                           textOutput("address1"),
+                                           textOutput("ba2p1"),
+                                           textOutput("ba2p3"),
+                                           textOutput("ba2p2")
+                                         ),
+                                         htmlOutput("line10"),
+                                         div(
+                                           textOutput("distance1"),
+                                           textOutput("busiDist2")
+                                         ),
+                                         htmlOutput("line11"),
+                                         div(
+                                           textOutput("price1"),
+                                           textOutput("busiPrice2")
+                                         ),
+                                         htmlOutput("line12"),
+                                         div(
+                                           textOutput("Average1"),
+                                           h4(textOutput("star2"))
+                                         ),
+                                         h3(textOutput("reviews1")),
+                                         div(
+                                           div(
+                                             textOutput("reviewtext4"),
+                                             htmlOutput("more4"),
+                                             tags$br(),
+                                             h4(textOutput("reviewStars4")),
+                                             tags$br(),
+                                             textOutput("reviewName4"),
+                                             textOutput("reviewDate4")
+                                           ),
+                                           htmlOutput("line13"),
+                                           div(
+                                             textOutput("reviewtext5"),
+                                             htmlOutput("more5"),
+                                             tags$br(),
+                                             h4(textOutput("reviewStars5")),
+                                             tags$br(),
+                                             textOutput("reviewName5"),
+                                             textOutput("reviewDate5")
+                                           ),
+                                           htmlOutput("line14"),
+                                           div(
+                                             textOutput("reviewtext6"),
+                                             htmlOutput("more6"),
+                                             tags$br(),
+                                             h4(textOutput("reviewStars6")),
+                                             tags$br(),
+                                             textOutput("reviewName6"),
+                                             textOutput("reviewDate6")
+                                           )
+                                         )
+                                )
                                 )
                        ),
                        
