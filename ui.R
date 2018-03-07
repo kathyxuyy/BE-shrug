@@ -16,15 +16,14 @@ shinyUI(
                                 sidebarLayout(
                                   
                                   sidebarPanel(
+                                    p("Shows a table of businesses based on your search terms."),
+                                    hr(),
                                     textInput("search_input", "Type your search here"),
                                     textInput("location_input", "Type your location here"),
                                     actionButton("search_button", label = "", icon = shiny::icon("search"))
                                     
                                   ),
                                   mainPanel(id = "yes",
-                                    h3(textOutput("tableInfo"),
-                                       tags$style(type="text/css", "#tableInfo { height: 50px; width: 100%; text-align:center; display: block; font-weight: bold; }")
-                                    ),
                                     dataTableOutput("businesses")
                                   )
                                 )
@@ -34,6 +33,8 @@ shinyUI(
                        tabPanel("Location Search",
                                 sidebarLayout(
                                   sidebarPanel(
+                                    p("Shows locations of businesses on a map based on your search term."),
+                                    hr(),
                                     textInput("search_box", "Type your business here"),
                                     textInput("location_box", "Type your location here"),
                                     
@@ -223,8 +224,12 @@ shinyUI(
                        tabPanel("Categories",
                                 sidebarLayout(
                                   sidebarPanel(
+                                    p("This shows the most popular restaurant categories for the location searched."),
+                                    hr(),
                                     textInput("search_location_categories", "Enter a location:", value = "Seattle"),
-                                    actionButton("analysis_button", label = "", icon = shiny::icon("search"))
+                                    actionButton("analysis_button", label = "", icon = shiny::icon("search")),
+                                    hr(),
+                                    p("This computation may take a while.")
                                   ),
                                   mainPanel(
                                     plotOutput("analytics")
@@ -236,9 +241,13 @@ shinyUI(
                        tabPanel("Popular Restaurants",
                                 sidebarLayout(
                                   sidebarPanel(
+                                    p("This provides information for the most talked about restaurants for the location searched which can be filtered by ratings or price."),
+                                    hr(),
                                     textInput("search_location", "Enter a location:", value = "Seattle"),
                                     radioButtons("factor", label = "", choices = list("rating" = 2, "price" = 3)),
-                                    actionButton("popular_button", label = "", icon = shiny::icon("search"))
+                                    actionButton("popular_button", label = "", icon = shiny::icon("search")),
+                                    hr(),
+                                    p("This computation may take a while.")
                                   ),
                                   mainPanel(
                                     plotOutput("popular")

@@ -49,8 +49,6 @@ function(input, output, session){
     colnames(compress) <- c("Name", "Image", "Yelp Link", "Review Count", "Rating", "Price", "Phone", "Address")
     
     output$businesses <- renderDataTable(DT::datatable(compress, escape = FALSE, selection = "none"))
-    output$tableInfo <- renderText(paste0(toupper(substring(input$search_input, 1,1)), 
-                                          substring(input$search_input, 2), " in ", toupper(substring(input$location_input, 1,1)), substring(input$location_input, 2)))
     
   })
   
