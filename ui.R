@@ -243,7 +243,7 @@ shinyUI(
                                   sidebarPanel(
                                     p("This provides information for the most talked about restaurants for the location searched which can be filtered by ratings or price."),
                                     hr(),
-                                    textInput("search_location", "Enter a location:", value = "Seattle"),
+                                    textInput("search_location", "Enter a location:"),
                                     radioButtons("factor", label = "", choices = list("rating" = 2, "price" = 3)),
                                     actionButton("popular_button", label = "", icon = shiny::icon("search")),
                                     hr(),

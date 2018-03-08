@@ -281,9 +281,9 @@ function(input, output, session){
   ######################################################################################################################################################################
   
   # This function requests business information from the YELP api and takes in parameter n for offsetting the list of returned businesses.
-  requestData <- function(n) {
+  requestData <- function(n, place) {
     path = "businesses/search" 
-    query.params = list(term = "food", location = input$search_location_categories, limit=50, offset=50*n-50)
+    query.params = list(term = "food", location = place, limit=50, offset=50*n-50)
     response <- GET(url = paste(base_yelp_url, path, sep = ""), query = query.params, add_headers('Authorization' = paste("bearer", yelp_api_key)), content_type_json())
     body <- content(response, "text")
     data <- fromJSON(body)
@@ -303,7 +303,7 @@ function(input, output, session){
       # per GET request and up to a 1000 rows as a whole)
       # !! This may take a while due to the fact that 20 GET requests has to be made
       for (i in 1:20) {
-        data <- requestData(i)
+        data <- requestData(i, input$search_location_categories)
         business.info <- rbind(business.info, data)
       }
       
@@ -336,29 +336,28 @@ function(input, output, session){
   ##  POPULAR RESTAURANTS 
   
   observeEvent(input$popular_button, {
-    # Creates a new data frame to store Yelp business information requested from the API
-    business.info <- data.frame()
-    
-    # This loop iterates over 20 times to obtain information from the YELP API(because YELP API only returns a maximum of 50 rows 
-    # per GET request and up to a 1000 rows as a whole)
-    # !! This may take a while due to the fact that 20 GET requests has to be made
-    for (i in 1:20) {
-      data <- requestData(i)
-      business.info <- rbind(business.info, data)
-    }
-    
-    coln <- as.numeric(input$factor)
-    
-    # This alters the business.info dataset keeping business with the top 7 highest no. of reviews
-    business.info <- business.info[with(business.info,order(-review_count)),]
-    business.info <- business.info[1:7,]
-    
-    # This removes all the other rows besides name, rating, price and review_count
-    business.info = business.info %>%
-      select(name, rating, price, review_count)
-    
-    # This renders the bar plot to the ui.R file
     output$popular <- renderPlot({
+      # Creates a new data frame to store Yelp business information requested from the API
+      business.info <- data.frame()
+      
+      # This loop iterates over 20 times to obtain information from the YELP API(because YELP API only returns a maximum of 50 rows 
+      # per GET request and up to a 1000 rows as a whole)
+      # !! This may take a while due to the fact that 20 GET requests has to be made
+      for (i in 1:20) {
+        data <- requestData(i, input$search_location)
+        business.info <- rbind(business.info, data)
+      }
+      
+      coln <- as.numeric(input$factor)
+      
+      # This alters the business.info dataset keeping business with the top 7 highest no. of reviews
+      business.info <- business.info[with(business.info,order(-review_count)),]
+      business.info <- business.info[1:7,]
+      
+      # This removes all the other rows besides name, rating, price and review_count
+      business.info = business.info %>%
+        select(name, rating, price, review_count)
+      
       # Changes the y-axis based on the input selected on the UI page
       if (coln == 2) {
         ggplot(business.info, aes(x = name, y = rating)) + geom_bar(stat = "identity") + labs(x="Most Popular restaurants", y=colnames(business.info[coln])) + 
