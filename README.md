@@ -15,6 +15,6 @@ This project utilizes packages such as DT, leaflet, ggmap, and shiny.
 
 # App Link
 
-Our app is deployed at, https://jit98.shinyapps.io/BE-shrug/
+Our app is deployed at https://jit98.shinyapps.io/BE-shrug/.
 
 
