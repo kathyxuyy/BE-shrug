@@ -7,9 +7,7 @@ library(DT)
 shinyUI(
   fluidPage(
     theme = "bootstrap.css", 
-    class = "sure",
-            includeCSS("style.css"),
-            navbarPage("Yelp Business", id = "no", inverse = TRUE,
+            navbarPage("Yelp Business", inverse = TRUE,
                        
                        # Creates a tab panel for Business Search
                        tabPanel("Business Search",
@@ -23,7 +21,9 @@ shinyUI(
                                     actionButton("search_button", label = "", icon = shiny::icon("search"))
                                     
                                   ),
-                                  mainPanel(id = "yes",
+                                  
+                                  # outputs the data table of businesses
+                                  mainPanel(
                                     dataTableOutput("businesses")
                                   )
                                 )
@@ -38,12 +38,12 @@ shinyUI(
                                     textInput("search_box", "Type your business here"),
                                     textInput("location_box", "Type your location here"),
                                     
-                                    #filters for the map: price, 
+                                    # filters for the map: price, 
                                     radioButtons("business_filter", label = "Prices", choices = list("No Preference" = "", "$", "$$", "$$$", "$$$$")),
                                     actionButton("location_button", label = "", icon = shiny::icon("search"))
                                   ),
                                   
-                                  
+                                  # outputs the map
                                   mainPanel(
                                     leafletOutput('myMap', height = "800")
                                   )
@@ -208,7 +208,7 @@ shinyUI(
                                   sidebarPanel(
                                     p("This shows the most popular restaurant categories for the location searched."),
                                     hr(),
-                                    textInput("search_location_categories", "Enter a location:", value = "Seattle"),
+                                    textInput("search_location_categories", "Enter a location:"),
                                     actionButton("analysis_button", label = "", icon = shiny::icon("search")),
                                     hr(),
                                     p("This computation may take a while.")

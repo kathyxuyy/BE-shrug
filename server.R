@@ -1,4 +1,3 @@
-
 # server.R file
 
 library(dplyr)
@@ -13,7 +12,9 @@ library(jsonlite)
 
 source("key.R")
 
-function(input, output, session){
+function(input, output){
+  
+  # this is the base yelp url for the yelp fusion API
   base_yelp_url <- "https://api.yelp.com/v3/"
   
   # This function requests business information from the YELP API and it takes it the query parameters necessary for the GET request
@@ -27,27 +28,27 @@ function(input, output, session){
   
   ## BUSINESS SEARCH TAB
   
-  output$tableInfo <- renderText("Business Data Will Appear Here")
-  
+  # waits for the button to be clicked before executing
   observeEvent(input$search_button, {
     query.params <- list(term = input$search_input, location = input$location_input, limit = 50)
     business_data <- getData(query.params)
     
     # this line makes it so the data table can be printed without altering the values in these columns
-    # they are normally in a form of a list and idk how to change them to string, to be fixed eventually
-    compress <- flatten(business_data[[1]]) %>% select(-id, -is_closed, -categories, -location.display_address, -categories, -transactions, -coordinates.latitude, -coordinates.longitude, -distance, -display_phone)
+    compress <- flatten(business_data[[1]]) %>% select(-id, -is_closed, -categories, -location.display_address, -categories, -transactions, -coordinates.latitude, -coordinates.longitude, -distance, -phone)
     compress$image_url <- paste("<img src='", compress$image_url, "' height = '60'</img>", sep = "")
     compress$url <- paste0("<a href='", compress$url, "' class = 'button'>Website</a>")
     
     # combine addresses to make clean looking address column
     compress$address <- paste0(compress$location.address1, "," , compress$location.city, ", ", compress$location.state, ", ", compress$location.zip_code, ", ", compress$location.country) 
     
+    # finally, deletes the extra address columns
     compress <- select(compress,-location.address1, -location.address2, -location.city, -location.state, -location.zip_code, -location.address3, -location.country)
     
     
-    # cleaning up coumn titles:
+    # cleaning up column titles:
     colnames(compress) <- c("Name", "Image", "Yelp Link", "Review Count", "Rating", "Price", "Phone", "Address")
     
+    # sends the data table to the output UI, also allows for HTML tags to apply (i.e. <a href>)
     output$businesses <- renderDataTable(DT::datatable(compress, escape = FALSE, selection = "none"))
     
   })
@@ -56,25 +57,33 @@ function(input, output, session){
   
   ## LOCATION SEARCH TAB
   
-  
+  # creates a default map zoomed out to view the US 
   map <- leaflet() %>% addTiles() %>% setView(-101.204687, 40.607628, zoom = 3)
   output$myMap <- renderLeaflet(map)
   
+  # preps variables that will be used later for plotting
   business_frame <- data.frame()
   center <- vector("list")
   
+  # waits for the button to be pressed before getting data to be plotted
   observeEvent(input$location_button, {
     query.params = list(term = input$search_box, location = input$location_box)
     specific_data <- getData(query.params)
     
+    # extracts the long, lat of the middle of the data set in question
     region <- specific_data[[3]]
     center <- region[[1]]
     
+    # flattens and extracts into one data frame
     business_frame <- flatten(specific_data[[1]])
     
+    # filters the resultant data based on an inputted price level
     if (input$business_filter != "") {
       business_frame <- filter(business_frame, price == input$business_filter)
     }
+    
+    # ensures that the map does not error out if the data frame is empty
+    # if it is empty, the map will default to the long, lat of the region from the search box
     if (nrow(business_frame) == 0) {
       view_city <- geocode(input$location_box)
       output$myMap <- renderLeaflet(map %>% setView(view_city[[1]], view_city[[2]], zoom = 13))
@@ -85,6 +94,7 @@ function(input, output, session){
                                                         lat = business_frame$coordinates.latitude, icon=icons, label = business_frame$name))
     }  
     
+    # sets the color of the icons to be used  
     getColor <- function(business_frame) {
       sapply(business_frame$rating, function(rating) {
         if(rating >= 4.5) {
@@ -96,6 +106,7 @@ function(input, output, session){
         } })
     }
     
+    # creates a list of icons to be used by the map
     icons <- awesomeIcons(
       icon = 'ios-close',
       iconColor = 'black',
@@ -103,8 +114,7 @@ function(input, output, session){
       markerColor = getColor(business_frame)
     )
     
-    
-    
+
   })
   
   ######################################################################################################################################################################
@@ -212,7 +222,7 @@ function(input, output, session){
     compress1 <- get_Data(input$name1, input$locationlocation)
     output$bn1 <- renderText(compress1$name)
     output$bi1 <- renderText(compress1$image_url)
-    output$bp1 <- renderText(paste("Phone:", compress$display_phone))
+    output$bp1 <- renderText(paste("Phone:", compress1$display_phone))
     output$star1 <- renderText(makeStars(compress1$rating))
     output$bp1 <- renderText(compress1$display_phone)
     output$ba1p1 <- renderText(compress1$location.address1)
@@ -256,7 +266,7 @@ function(input, output, session){
     compress2 <- get_Data(input$name2, input$locationlocation)
     output$bn2 <- renderText(compress2$name)
     output$bi2 <- renderText(compress2$image_url)
-    output$bp2 <- renderText(paste("Phone:", compress$display_phone))
+    output$bp2 <- renderText(paste("Phone:", compress2$display_phone))
     output$star2 <- renderText(makeStars(compress2$rating))
     output$bp2 <- renderText(compress2$display_phone)
     output$ba2p1 <- renderText(compress2$location.address1)
